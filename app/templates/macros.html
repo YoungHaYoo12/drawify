@@ -1,0 +1,21 @@
+<!-- Loads canvas-set widget. The arguments 'names' and 'classes' are both lists of which each index corresponds to a button to be added. 
+ -->
+{% macro canvas_set_widget(names,classes) %}
+<div id="canvas-set">
+  <div id="canvas-wrapper">
+  {% include 'canvas.html' %}
+  </div>
+  <div id="toolbox">
+    <div class="tools"></div>
+    <div class="custom-buttons">
+      {% for name in names %}
+        <a>
+          <button class="btn btn-info {{classes[loop.index0]}}">
+            {{name}}
+          </button>
+        </a>
+      {% endfor %}
+    </div>
+  </div>
+</div>
+{% endmacro %}

@@ -95,11 +95,9 @@ window.addEventListener('load',userDraw);
 window.addEventListener('resize',resizeCanvasSet);
 
 // 
-$('.draw-buttons a').click(
+$('.draw-buttons').click(
   () => {
-    const canvasSet = $('.draw-buttons').siblings('#canvas-set');
-    const canvasWrapper = $(canvasSet).find('#canvas-wrapper');
-    const canvas = $(canvasWrapper).find('#canvas')[0];
+    const canvas = $('#canvas')[0];
     
   $.ajax(
     {

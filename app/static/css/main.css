@@ -4,6 +4,12 @@
   left:0px;
 }
 
+#canvas-set {
+  position:absolute;
+  top:0px;
+  left:0px;
+}
+
 /* drawings/draw.html  */
 .draw-buttons {
   width:100%;
@@ -31,7 +37,7 @@
   border:solid black 1px;
 }
 
-/* canvas.html  */
+/* macros.html  */
 .lineWidth-range {
   position:relative;
 }
@@ -45,5 +51,10 @@
 
 #canvas-set {
   display:grid;
-  grid-template-columns: 9fr 1fr;
+  grid-template-columns: 8fr 2fr;
+}
+
+#toolbox {
+  display:grid;
+  grid-template-rows: 5fr 1fr;
 }
