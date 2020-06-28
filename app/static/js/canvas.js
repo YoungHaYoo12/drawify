@@ -1,3 +1,54 @@
+// toolbox components
+// transparency slider 
+transparency_slider = document.getElementById('transparency');
+transparency_slider.addEventListener('change', () => {
+  const canvas = document.getElementById('canvas');
+
+  if (canvas.getContext) {
+    const ctx = canvas.getContext('2d');
+    ctx.globalAlpha = transparency_slider.value;
+}
+}
+)
+
+// color input
+color_selector = document.getElementById('color');
+color_selector.addEventListener('change', () => {
+  const canvas = document.getElementById('canvas');
+
+  if (canvas.getContext) {
+    const ctx = canvas.getContext('2d');
+    ctx.strokeStyle = color.value;
+}
+})
+
+// line thickness slider
+line_thickness_slider = document.getElementById('line-thickness');
+line_thickness_slider.addEventListener('change', () => {
+  const canvas = document.getElementById('canvas');
+
+  if (canvas.getContext) {
+    const ctx = canvas.getContext('2d');
+    ctx.lineWidth = line_thickness_slider.value;
+}
+}
+)
+
+// line cap
+line_cap_selector = document.getElementById('line-cap');
+line_cap_selector.addEventListener('change', () => {
+  const canvas = document.getElementById('canvas');
+
+  if (canvas.getContext) {
+    const ctx = canvas.getContext('2d');
+    ctx.lineCap = line_cap_selector.value;
+}
+}
+)
+
+
+// ******************************************//
+
 // Make in-memory canvas
 var inMemCanvas = document.createElement('canvas');
 var inMemCtx = inMemCanvas.getContext('2d');
@@ -27,8 +78,6 @@ function userDraw() {
     // between start and stop of drawing
     function draw(e) {
       if (!painting) return;
-      ctx.lineWidth=3;
-      ctx.lineCap = 'round';
 
       ctx.lineTo(e.clientX,e.clientY);
       ctx.stroke();

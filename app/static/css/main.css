@@ -47,6 +47,7 @@
   width:100%;
   position:relative;
   border:solid blue 2px;
+  padding:20px;
 }
 
 #canvas-set {
