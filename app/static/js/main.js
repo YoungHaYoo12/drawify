@@ -4,6 +4,17 @@ var inMemCtx = inMemCanvas.getContext('2d');
 inMemCanvas.width = window.innerWidth;
 inMemCanvas.height = window.innerHeight;
 
+// Features
+var lineWidth=3;
+var lineCamp = 'round';
+var fillStyle = 'blue';
+var strokeStyle = 'blue';
+var globalAlpha = 0.2;
+
+['butt','round','square']
+
+
+
 function userDraw() {
   const canvas = document.getElementById('canvas');
 
@@ -43,10 +54,16 @@ function userDraw() {
   }
 }
 
-function resizeCanvas() {
+function resizeCanvasSet() {
+  // resize height and width of canvas-set div
+  const canvasSet = document.querySelector('#canvas-set');
+  canvasSet.style.width = window.innerWidth + 'px';
+  canvasSet.style.height = window.innerHeight + 'px';
+
   const canvas = document.getElementById('canvas');
   const ctx = canvas.getContext('2d');
 
+  // reset the size of canvas in memory if canvas increased in dimension
   if (canvas.height > inMemCanvas.height && canvas.width > inMemCanvas.width) {
     inMemCanvas.height = canvas.height;
     inMemCanvas.width = canvas.width;
@@ -55,8 +72,12 @@ function resizeCanvas() {
   // save to inMem canvas
   inMemCtx.drawImage(canvas,0,0);
 
+  // set canvas dimensions to that of canvasWrapper
+  const canvasWrapper = document.getElementById('canvas-wrapper');
   canvas.height = window.innerHeight;
-  canvas.width = window.innerWidth;
+  canvas.width = canvasWrapper.offsetWidth;
+
+  // redraw, using inMem canvas contents
   ctx.drawImage(inMemCanvas,0,0);
 }
 
@@ -69,14 +90,16 @@ function getBackCanvas(dataURL,ctx) {
 }
 
 // window event listeners
-resizeCanvas();
+resizeCanvasSet();
 window.addEventListener('load',userDraw);
-window.addEventListener('resize',resizeCanvas);
+window.addEventListener('resize',resizeCanvasSet);
 
 // 
 $('.draw-buttons a').click(
   () => {
-    const canvas = $('.draw-buttons').siblings('#canvas')[0]
+    const canvasSet = $('.draw-buttons').siblings('#canvas-set');
+    const canvasWrapper = $(canvasSet).find('#canvas-wrapper');
+    const canvas = $(canvasWrapper).find('#canvas')[0];
     
   $.ajax(
     {

@@ -15,6 +15,7 @@
 
 .draw-buttons a {
   position:relative;
+  bottom:0;
   flex:1;
   text-align:center;
 }
@@ -28,4 +29,21 @@
 
 .drawing {
   border:solid black 1px;
+}
+
+/* canvas.html  */
+.lineWidth-range {
+  position:relative;
+}
+
+#toolbox {
+  height:100%;
+  width:100%;
+  position:relative;
+  border:solid blue 2px;
+}
+
+#canvas-set {
+  display:grid;
+  grid-template-columns: 9fr 1fr;
 }
