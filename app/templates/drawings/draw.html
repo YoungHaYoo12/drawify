@@ -3,3 +3,8 @@
 {% block content %}
   {{macros.canvas_set_widget(['Add Drawing'],['draw-buttons'])}}
 {% endblock %}
+
+{% block scripts %}
+    <script src="{{url_for('static',filename='js/canvas.js')}}"></script>
+    <script src="{{url_for('static',filename='js/draw.js')}}"></script>
+{% endblock %}
