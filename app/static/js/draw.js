@@ -21,3 +21,6 @@ $('.draw-buttons').click(
   )
   }
 )
+
+// hide navbar 
+$('nav').hide();
