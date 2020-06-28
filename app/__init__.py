@@ -20,8 +20,10 @@ def create_app(config_name='default'):
   # Register blueprints
   from app.core import core as core_blueprint
   from app.auth import auth as auth_blueprint
+  from app.drawings import drawings as drawings_blueprint
 
   app.register_blueprint(core_blueprint)
   app.register_blueprint(auth_blueprint,url_prefix='/auth')
+  app.register_blueprint(drawings_blueprint,url_prefix='/drawings')
 
   return app

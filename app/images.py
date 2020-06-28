@@ -14,7 +14,7 @@ def save_image(dataURL):
   random_hex = secrets.token_hex(8)
   picture_fn = random_hex + '.png'
   app_root_path = os.path.dirname(os.path.abspath(__file__))
-  picture_path = os.path.join(app_root_path,'static','images',picture_fn)
+  picture_path = os.path.join(app_root_path,'static','drawing_images',picture_fn)
 
   # save image
   img.save(picture_path)

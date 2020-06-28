@@ -1,0 +1,20 @@
+#canvas {
+  position:absolute;
+  top:0px;
+  left:0px;
+}
+
+/* drawings/draw.html  */
+.draw-buttons {
+  width:100%;
+  height:50px;
+  display:flex;
+  justify-content:center;
+  align-items:center;
+}
+
+.draw-buttons a {
+  position:relative;
+  flex:1;
+  text-align:center;
+}

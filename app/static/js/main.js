@@ -72,3 +72,28 @@ function getBackCanvas(dataURL,ctx) {
 resizeCanvas();
 window.addEventListener('load',userDraw);
 window.addEventListener('resize',resizeCanvas);
+
+// 
+$('.draw-buttons a').click(
+  () => {
+    const canvas = $('.draw-buttons').siblings('#canvas')[0]
+    
+  $.ajax(
+    {
+      url:'/drawings/add',
+      type: 'POST',
+      data: {
+        dataURL:canvas.toDataURL()
+      }
+    }
+  )
+  .done(
+    function(data) {
+     if (data.result == 'success') {
+       console.log('SUCCESS')
+     }
+    }
+  )
+
+  }
+)
