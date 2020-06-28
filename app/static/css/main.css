@@ -1,14 +1,25 @@
+/* base.html  */
+.navbar {
+  font-size:1.2rem;
+  letter-spacing:.15rem;
+}
+
+.navbar .navbar-brand {
+  font-size:1.7rem !important;
+  font-weight:700;
+}
+
+.navbar-nav li {
+  padding-right: 1.3rem;
+}
+
+/* canvas.html  */
 #canvas {
   position:absolute;
   top:0px;
   left:0px;
 }
 
-#canvas-set {
-  position:absolute;
-  top:0px;
-  left:0px;
-}
 
 /* drawings/draw.html  */
 .draw-buttons {
