@@ -5,6 +5,14 @@ from app.drawings import drawings
 from app.images import save_image
 from app.models import User, Drawing
 
+@drawings.route('/list/<username>')
+@login_required
+def list(username):
+  user = User.query.filter_by(username=username).first_or_404()
+  drawings = user.drawings.all()
+
+  return render_template('drawings/list.html',drawings=drawings,user=user)
+
 @drawings.route('/draw')
 @login_required
 def draw():

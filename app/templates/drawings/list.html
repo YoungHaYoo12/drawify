@@ -1,0 +1,14 @@
+{% extends "base.html" %}
+{% block content %}
+
+<h1>Drawings of {{user.username}}</h1>
+<div class="container">
+  <div class="drawings">
+    {% for drawing in drawings %}
+    <div class="drawing">
+      <img src="{{url_for('static',filename='drawing_images/'+drawing.filename)}}" width=300px height=300px>
+    </div>
+    {% endfor %}
+  </div>
+</div>
+{% endblock %}
