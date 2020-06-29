@@ -5,6 +5,11 @@ from datetime import datetime
 from time import time
 import json
 
+class Follow(db.Model):
+  __tablename__ = 'follows'
+  follower_id = db.Column(db.Integer, db.ForeignKey('users.id'), primary_key=True)
+  followed_id = db.Column(db.Integer, db.ForeignKey('users.id'),primary_key=True)
+  timestamp = db.Column(db.DateTime, default=datetime.utcnow)
 
 class User(db.Model,UserMixin):
   __tablename__ = 'users'
@@ -18,6 +23,36 @@ class User(db.Model,UserMixin):
   questions_sent = db.relationship('Question',foreign_keys='Question.sender_id',backref='author',lazy='dynamic')
   questions_received = db.relationship('Question',foreign_keys='Question.recipient_id',backref='recipient',lazy='dynamic')
   last_question_read_time = db.Column(db.DateTime)
+
+  # Follower Functionality
+  followed = db.relationship('Follow',
+                            foreign_keys=[Follow.follower_id],
+                            backref=db.backref('follower',lazy='joined'),
+                            lazy='dynamic',
+                            cascade='all, delete-orphan')
+  followers = db.relationship('Follow',
+                            foreign_keys=[Follow.followed_id],
+                            backref=db.backref('followed',lazy='joined'),
+                            lazy='dynamic',
+                            cascade='all, delete-orphan')
+
+  def is_following(self,user):
+    return self.followed.filter_by(followed_id=user.id).first() is not None
+  
+  def is_followed_by(self,user):
+    return self.followers.filter_by(follower_id=user.id).first() is not None
+  
+  def follow(self,user):
+    if not self.is_following(user):
+      f = Follow(follower=self,followed=user)
+      db.session.add(f)
+      db.session.commit()
+  
+  def unfollow(self,user):
+    f = self.followed.filter_by(followed_id=user.id).first()
+    if f:
+      db.session.delete(f)
+      db.session.commit()
 
   def new_questions(self):
     last_read_time = self.last_question_read_time or datetime(1900,1,1)

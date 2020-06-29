@@ -1,5 +1,6 @@
-from flask import render_template, request,jsonify
+from flask import render_template, request,jsonify,flash, redirect,url_for
 from flask_login import login_required, current_user
+from app import db
 from app.core import core
 from app.models import Notification,User
 
@@ -14,8 +15,6 @@ def user(username):
 
   return render_template('core/user.html',user=user)
 
-
-
 @core.route('/notifications')
 @login_required
 def notifications():
@@ -27,3 +26,33 @@ def notifications():
         'data': n.get_data(),
         'timestamp': n.timestamp
     } for n in notifications])
+
+@core.route('/follow/<username>')
+@login_required
+def follow(username):
+  user = User.query.filter_by(username=username).first()
+  if user is None:
+    flash('Invalid User')
+    return redirect(url_for('core.index'))
+  if current_user.is_following(user):
+    flash('You are already following this user.')
+    return redirect(url_for('core.user',username=username))
+  current_user.follow(user)
+  db.session.commit()
+  flash(f"You are now following {username}")
+  return redirect(url_for('core.user',username=username))
+
+@core.route('/unfollow/<username>')
+@login_required
+def unfollow(username):
+  user = User.query.filter_by(username=username).first()
+  if user is None:
+    flash('Invalid User')
+    return redirect(url_for('core.index'))
+  if not current_user.is_following(user):
+    flash('You are currently not following this user.')
+    return redirect(url_for('core.user',username=username))
+  current_user.unfollow(user)
+  db.session.commit()
+  flash(f"You are no longer following {username}")
+  return redirect(url_for('core.user',username=username))
