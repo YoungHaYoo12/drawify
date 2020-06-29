@@ -21,6 +21,11 @@ def send_question(recipient,drawing_id):
   form = QuestionForm()
 
   if form.validate_on_submit():
+    # Update user questions count notification
+    user.add_notifications('unread_question_count',user.new_questions())
+    db.session.commit()
+
+    # add new Question instance
     question = Question(author=current_user, recipient=user,answer=form.answer.data,drawing=drawing)
     db.session.add(question)
     db.session.commit()
