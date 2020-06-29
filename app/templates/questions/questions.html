@@ -1,0 +1,10 @@
+{% extends "base.html" %}
+{% block content %}
+{% for question in questions %}
+<h1>Question from {{question.author.username}}</h1>
+<p>{{question.drawing_id}}</p>
+<p>{{question.recipient.username}}</p>
+<p>{{question.timestamp}}</p>
+<p>{{question.answer}}</p>
+{% endfor %}
+{% endblock %}
