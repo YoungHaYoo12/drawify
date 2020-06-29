@@ -2,6 +2,7 @@ from app import db, login_manager
 from flask_login import UserMixin
 from werkzeug.security import generate_password_hash, check_password_hash
 from datetime import datetime
+from time import time
 
 
 class User(db.Model,UserMixin):
@@ -11,6 +12,7 @@ class User(db.Model,UserMixin):
   email = db.Column(db.String(64),unique=True,index=True)
   password_hash = db.Column(db.String(128))
   drawings = db.relationship('Drawing',backref='user',lazy='dynamic',cascade="all, delete-orphan")
+  notifications = db.relationship('Notification',backref='user',lazy='dynamic')
 
   questions_sent = db.relationship('Question',foreign_keys='Question.sender_id',backref='author',lazy='dynamic')
   questions_received = db.relationship('Question',foreign_keys='Question.recipient_id',backref='recipient',lazy='dynamic')
@@ -19,6 +21,13 @@ class User(db.Model,UserMixin):
   def new_questions(self):
     last_read_time = self.last_question_read_time or datetime(1900,1,1)
     return Question.query.filter_by(recipient=self).filter(Question.timestamp > last_read_time).count()
+  
+  def add_notifications(self,name,data):
+    self.notifications.filter_by(name=name).delete()
+    n = Notification(name=name, payload_json=json.dumps(data), user=self)
+    db.session.add(n)
+    db.session.commit()
+    return n
 
   @property
   def password(self):
@@ -67,3 +76,12 @@ class Question(db.Model):
   def __repr__(self):
     return f"<Question {self.answer}>"
 
+class Notification(db.Model):
+  id = db.Column(db.Integer, primary_key=True)
+  name = db.Column(db.String(128), index=True)
+  user_id = db.Column(db.Integer, db.ForeignKey('users.id'))
+  timestamp = db.Column(db.Float,index=True,default=time)
+  payload_json = db.Column(db.Text)
+
+  def get_data(self):
+    return json.loads(str(self.payload_json))
