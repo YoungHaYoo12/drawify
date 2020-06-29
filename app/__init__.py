@@ -21,9 +21,11 @@ def create_app(config_name='default'):
   from app.core import core as core_blueprint
   from app.auth import auth as auth_blueprint
   from app.drawings import drawings as drawings_blueprint
+  from app.questions import questions as questions_blueprint
 
   app.register_blueprint(core_blueprint)
   app.register_blueprint(auth_blueprint,url_prefix='/auth')
   app.register_blueprint(drawings_blueprint,url_prefix='/drawings')
+  app.register_blueprint(questions_blueprint,url_prefix='/questions')
 
   return app
