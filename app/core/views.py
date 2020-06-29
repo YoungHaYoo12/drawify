@@ -1,11 +1,20 @@
 from flask import render_template, request,jsonify
 from flask_login import login_required, current_user
 from app.core import core
-from app.models import Notification
+from app.models import Notification,User
 
 @core.route('/')
 def index():
   return render_template('core/index.html')
+
+@core.route('/user/<username>')
+@login_required
+def user(username):
+  user = User.query.filter_by(username=username).first_or_404()
+
+  return render_template('core/user.html',user=user)
+
+
 
 @core.route('/notifications')
 @login_required
