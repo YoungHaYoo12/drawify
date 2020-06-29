@@ -108,6 +108,8 @@ class Question(db.Model):
   drawing_id = db.Column(db.Integer, db.ForeignKey('drawings.id'))
   answer = db.Column(db.String(64))
   timestamp = db.Column(db.DateTime, index=True, default=datetime.utcnow)
+  max_tries = db.Column(db.Integer,default=3)
+  num_of_tries = db.Column(db.Integer,default=0)
 
   def __repr__(self):
     return f"<Question {self.answer}>"
