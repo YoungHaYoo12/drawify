@@ -93,7 +93,7 @@ class Drawing(db.Model):
   id = db.Column(db.Integer,primary_key=True)
   filename = db.Column(db.String(64),unique=True)
   user_id = db.Column(db.Integer, db.ForeignKey('users.id'))
-  question = db.relationship('Question',backref='drawing',uselist=False)
+  questions = db.relationship('Question',backref='drawing')
 
   def __init__(self,filename):
     self.filename = filename
