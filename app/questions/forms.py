@@ -10,3 +10,7 @@ class QuestionForm(FlaskForm):
 class QuestionAnswerForm(FlaskForm):
   answer = StringField('Answer',validators=[DataRequired(),Length(min=0,max=64)])
   submit = SubmitField('Submit')
+
+class HintForm(FlaskForm):
+  body = StringField('Hint',validators=[DataRequired(),Length(min=0,max=256)])
+  submit = SubmitField('Submit')

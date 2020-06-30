@@ -1,7 +1,7 @@
 from app import db
 from app.questions import questions
-from app.questions.forms import QuestionForm, QuestionAnswerForm
-from app.models import Question,User,Drawing
+from app.questions.forms import QuestionForm, QuestionAnswerForm,HintForm
+from app.models import Question,User,Drawing, Hint
 from flask_login import login_required, current_user
 from flask import render_template, redirect, url_for, flash, abort
 from datetime import datetime
@@ -35,6 +35,26 @@ def send_question(recipient,drawing_id):
     return redirect(url_for('core.index'))
 
   return render_template('questions/send_question.html',form=form,recipient=recipient)
+
+@questions.route('/send_hint/<question_id>',methods=['GET','POST'])
+@login_required
+def send_hint(question_id):
+  # retrieve and validate question
+  question = Question.query.get_or_404(question_id)
+  if not question in current_user.questions_sent.all():
+    abort(403)
+  
+  # form processing
+  form = HintForm()
+
+  if form.validate_on_submit():
+    hint = Hint(body=form.body.data,question=question)
+    db.session.add(hint)
+    db.session.commit()
+    flash('Hint Successfully Submitted')
+    return redirect(url_for('questions.list'))
+
+  return render_template('questions/send_hint.html',form=form)
 
 @questions.route('/list')
 @login_required
