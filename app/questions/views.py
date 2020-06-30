@@ -69,6 +69,20 @@ def list():
 
   return render_template('questions/list.html', questions_received=questions_received,questions_sent=questions_sent)
 
+@questions.route('/abandon_question/<int:id>')
+@login_required
+def abandon_question(id):
+  # retrieve and validate question
+  question = Question.query.get_or_404(id)
+
+  if current_user != question.recipient:
+    abort(403)
+  
+  question.status = 'abandoned'
+  db.session.commit()
+
+  return redirect(url_for('questions.question',id=question.id))
+
 @questions.route('/question/<int:id>',methods=['GET','POST'])
 @login_required
 def question(id):
