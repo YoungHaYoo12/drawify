@@ -69,18 +69,18 @@ def list():
 
   return render_template('questions/list.html', questions_received=questions_received,questions_sent=questions_sent)
 
-@questions.route('/answer/<int:id>',methods=['GET','POST'])
+@questions.route('/question/<int:id>',methods=['GET','POST'])
 @login_required
-def answer(id):
+def question(id):
   # retrieve and validate question
   question = Question.query.get_or_404(id)
-  if not question in current_user.questions_received.all():
+  if not question in current_user.questions_received.all() and not question in current_user.questions_sent.all():
     abort(403)
   
   # form processing
   form = QuestionAnswerForm()
 
-  if form.validate_on_submit() and question.status == 'in_progress':
+  if form.validate_on_submit() and question.status == 'in_progress' and question in current_user.questions_received.all():
     # increment question num of tries
     question.num_of_tries = question.num_of_tries + 1
     db.session.commit()
@@ -100,6 +100,6 @@ def answer(id):
     else:
       flash('Incorrect. Please Try Again.')
 
-    return redirect(url_for('questions.answer',id=question.id))
+    return redirect(url_for('questions.question',id=question.id))
 
   return render_template('questions/question.html',form=form,question=question)
