@@ -20,8 +20,8 @@ class User(db.Model,UserMixin):
   drawings = db.relationship('Drawing',backref='user',lazy='dynamic',cascade="all, delete-orphan")
   notifications = db.relationship('Notification',backref='user',lazy='dynamic')
 
-  questions_sent = db.relationship('Question',foreign_keys='Question.sender_id',backref='author',lazy='dynamic')
-  questions_received = db.relationship('Question',foreign_keys='Question.recipient_id',backref='recipient',lazy='dynamic')
+  questions_sent = db.relationship('Question',foreign_keys='Question.sender_id',backref='author',lazy='dynamic',cascade="all, delete-orphan")
+  questions_received = db.relationship('Question',foreign_keys='Question.recipient_id',backref='recipient',lazy='dynamic',cascade="all, delete-orphan")
   last_question_read_time = db.Column(db.DateTime)
 
   # Follower Functionality
@@ -93,7 +93,7 @@ class Drawing(db.Model):
   id = db.Column(db.Integer,primary_key=True)
   filename = db.Column(db.String(64),unique=True)
   user_id = db.Column(db.Integer, db.ForeignKey('users.id'))
-  questions = db.relationship('Question',backref='drawing')
+  questions = db.relationship('Question',backref='drawing',cascade="all, delete-orphan")
 
   def __init__(self,filename):
     self.filename = filename
