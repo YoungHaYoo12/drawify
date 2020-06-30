@@ -1,0 +1,25 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container">
+  <div class="answer-question-form">
+    <h1>Answer Question</h1>
+    <h3>Drawing {{question.drawing_id}}</h3>
+    <p>Num of Tries {{question.num_of_tries}}</p>
+    <p>Max Tries {{question.max_tries}}</p>
+    <p>Status {{question.status}}</p>
+    {% if question.status == 'in_progress' %}
+      <form method='POST'>
+        {{form.hidden_tag()}}
+
+        <div class="form-group">
+          {{form.answer.label}}
+          {{form.answer(class="form-control")}}
+        </div>
+
+        {{form.submit(class="btn btn-primary")}}
+      </form>
+    {% endif %}
+  </div>
+</div>
+{% endblock %}

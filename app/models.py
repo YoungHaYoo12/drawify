@@ -116,6 +116,9 @@ class Question(db.Model):
 
   def check_answer(self,answer):
     return self.answer == answer
+  
+  def check_lost(self):
+    return self.max_tries == self.num_of_tries
 
   def __repr__(self):
     return f"<Question {self.answer}>"

@@ -30,7 +30,7 @@
           <a class="nav-link" href="{{url_for('drawings.list',username=current_user.username)}}">My Drawings</a>
         </li>
         <li class="nav-item">
-          <a class="nav-link" href="{{url_for('questions.questions')}}">
+          <a class="nav-link" href="{{url_for('questions.list')}}">
             Questions
             {% set new_questions = current_user.new_questions() %}
             <span id="question_count" class="badge"
@@ -77,7 +77,7 @@
         $(function() {
             var since = 0;
             setInterval(function() {
-                $.ajax('{{ url_for('questions.questions') }}?since=' + since).done(
+                $.ajax('{{ url_for('questions.list') }}?since=' + since).done(
                     function(notifications) {
                         for (var i = 0; i < notifications.length; i++) {
                             if (notifications[i].name == 'unread_message_count')
