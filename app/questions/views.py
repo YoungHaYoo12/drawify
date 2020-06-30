@@ -78,8 +78,12 @@ def abandon_question(id):
   if current_user != question.recipient:
     abort(403)
   
-  question.status = 'abandoned'
-  db.session.commit()
+  if question.status != 'in_progress':
+    flash('Question is not currently in progress and cannot be abandoned.')
+  else:
+    flash('Question Successfully Abandoned.')
+    question.status = 'abandoned'
+    db.session.commit()
 
   return redirect(url_for('questions.question',id=question.id))
 
