@@ -27,6 +27,8 @@ def send_question(recipient,drawing_id):
 
     # add new Question instance
     question = Question(author=current_user, recipient=user,answer=form.answer.data,drawing=drawing)
+    if form.max_tries.data:
+      question.max_tries = form.max_tries.data
     db.session.add(question)
     db.session.commit()
     flash('Your question has been sent.')

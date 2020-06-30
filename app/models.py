@@ -112,9 +112,19 @@ class Question(db.Model):
   max_tries = db.Column(db.Integer,default=3)
   num_of_tries = db.Column(db.Integer,default=0)
   status = db.Column(db.Enum('complete','in_progress','lost','abandoned'),nullable=False,server_default="in_progress")
+  hints = db.relationship('Hint',backref='question',lazy='dynamic',cascade="all, delete-orphan")
 
   def __repr__(self):
     return f"<Question {self.answer}>"
+
+class Hint(db.Model):
+  __tablename__ = 'hints'
+  id = db.Column(db.Integer, primary_key=True)
+  body = db.Column(db.String(256))
+  question_id = db.Column(db.Integer, db.ForeignKey('questions.id'))
+
+  def __repr__(self):
+    return f"<Hint {self.body}>"
 
 class Notification(db.Model):
   __tablename__ = 'notifications'
