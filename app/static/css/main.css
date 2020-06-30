@@ -146,6 +146,29 @@ body {
   float:right;
 }
 
+/* questions/question.html  */
+.questions-question-wrapper ul {
+  list-style-type:none;
+}
+
+.questions-question-wrapper .hints {
+  margin-bottom: 20px;
+}
+
+.hint-view-btn {
+  color:blue;
+}
+.hint-hide-btn {
+  color:blue;
+}
+
+.hint-view-btn:hover {
+  cursor:pointer;
+}
+.hint-hide-btn:hover {
+  cursor:pointer;
+}
+
 /* auth/register.html and auth/login.html */
 .jumbotron {
   border:solid black 2px;
