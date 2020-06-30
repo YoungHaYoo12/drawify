@@ -114,6 +114,9 @@ class Question(db.Model):
   status = db.Column(db.Enum('complete','in_progress','lost','abandoned'),nullable=False,server_default="in_progress")
   hints = db.relationship('Hint',backref='question',lazy='dynamic',cascade="all, delete-orphan")
 
+  def check_answer(self,answer):
+    return self.answer == answer
+
   def __repr__(self):
     return f"<Question {self.answer}>"
 
