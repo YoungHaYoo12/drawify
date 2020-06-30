@@ -1,3 +1,11 @@
+/* General Classes */
+.centered-div {
+  position:absolute;
+  top:50%;
+  left:50%;
+  transform:translate(-50%, -50%);
+}
+
 /* base.html  */
 body {
   background-image: url('/static/images/background.jpg');
@@ -11,6 +19,7 @@ body {
   font-size:1.2rem;
   letter-spacing:.15rem;
   background:rgba(255,255,255,0.8);
+  margin-bottom:30px;
 }
 
 .navbar .navbar-brand {
@@ -47,7 +56,12 @@ body {
 }
 
 .drawing {
-  border:solid black 1px;
+  border:solid black 2px;
+  background-color:white;
+}
+
+.drawings-list-wrapper .drawings {
+  margin-top:20px;
 }
 
 /* macros.html  */
@@ -108,4 +122,37 @@ body {
 .tab-content {
   margin-left:20px;
   margin-right:20px;
+  height:100%;
+}
+
+.questions-list-wrapper {
+  height:100%;
+  width:60%;
+  padding:30px;
+  background-color:rgba(255,255,255,0.8);
+  margin:auto;
+}
+
+.questions-list-wrapper .question {
+  background-color:#FDAB9F;
+  margin-top:30px;
+  display:grid;
+  grid-template-columns: 8fr 2fr;
+  border:solid black 1px;
+}
+
+.question-drawing img {
+  background-color:white;
+  float:right;
+}
+
+/* auth/register.html and auth/login.html */
+.jumbotron {
+  border:solid black 2px;
+}
+
+/* core/user.html */
+
+.art-gallery {
+  margin-top:20px;
 }

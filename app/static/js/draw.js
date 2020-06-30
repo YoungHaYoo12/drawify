@@ -24,3 +24,6 @@ $('.draw-buttons').click(
 
 // hide navbar 
 $('nav').hide();
+
+// hide background image
+$('body').css({'background-image':'none'});

@@ -2,13 +2,12 @@
 
 {% block content %}
 <div class="container">
-  <div class="send-hint-form">
-    <h1>Send Hint To</h1>
+  <div class="send-hint-form jumbotron centered-div">
+    <h1>Send Hint</h1>
     <form method='POST'>
       {{form.hidden_tag()}}
 
       <div class="form-group">
-        {{form.body.label}}
         {{form.body(class="form-control")}}
       </div>
 

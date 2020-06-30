@@ -1,26 +1,28 @@
 {% extends "base.html" %}
 
 {% block content %}
-<div class="container">
-  <h3>Drawing {{question.drawing_id}}</h3>
-  <p>Num of Tries {{question.num_of_tries}}</p>
-  <p>Max Tries {{question.max_tries}}</p>
-  <p>Status {{question.status}}</p>
+<div class="questions-question-wrapper">
+  <div class="container jumbotron">
+    <h1 class="text-center">Drawing {{question.drawing_id}}</h1>
+    <h5>Current Number of Tries: {{question.num_of_tries}}</h5>
+    <h5>Maximum Number of Tries: {{question.max_tries}}</h5>
+    <h5>Status: {{question.status | capitalize}}</h5>
+    <br>
 
-  {% if question.status == 'in_progress' and question.recipient == current_user %}
-  <div class="answer-question-form">
-    <h1>Answer Question</h1>
-      <form method='POST'>
-        {{form.hidden_tag()}}
+    {% if question.status == 'in_progress' and question.recipient == current_user %}
+    <div class="answer-question-form">
+        <form method='POST'>
+          {{form.hidden_tag()}}
 
-        <div class="form-group">
-          {{form.answer.label}}
-          {{form.answer(class="form-control")}}
-        </div>
+          <div class="form-group">
+            {{form.answer.label}}
+            {{form.answer(class="form-control")}}
+          </div>
 
-        {{form.submit(class="btn btn-primary")}}
-      </form>
+          {{form.submit(class="btn btn-primary")}}
+        </form>
+    </div>
+  {% endif %}
   </div>
-{% endif %}
 </div>
 {% endblock %}
