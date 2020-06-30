@@ -1,7 +1,16 @@
 /* base.html  */
+body {
+  background-image: url('/static/images/background.jpg');
+  background-size:cover;
+  background-position:center;
+  background-attachment:fixed;
+  height:100vh;
+}
+
 .navbar {
   font-size:1.2rem;
   letter-spacing:.15rem;
+  background:rgba(255,255,255,0.8);
 }
 
 .navbar .navbar-brand {
