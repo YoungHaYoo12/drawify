@@ -64,3 +64,39 @@
   display:grid;
   grid-template-rows: 5fr 1fr;
 }
+
+/* questions/list.html  */
+[data-tab-content] {
+  display:none;
+}
+
+.active[data-tab-content] {
+  display:block;
+}
+
+.tabs {
+  display:flex;
+  justify-content:space-around;
+  list-style-type:none;
+  margin:0;
+  padding:0;
+  border-bottom: solid black 1px;
+}
+
+.tab {
+  cursor:pointer;
+  padding:10px;
+}
+
+.tab:hover {
+  background-color: rgb(255, 255, 255);
+}
+
+.tab.active {
+  background-color: rgb(255, 255, 255);
+}
+
+.tab-content {
+  margin-left:20px;
+  margin-right:20px;
+}

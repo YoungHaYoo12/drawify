@@ -64,9 +64,10 @@ def list():
   db.session.commit()
 
   # load and render questions
-  questions = current_user.questions_received.order_by(Question.timestamp.desc()).all()
+  questions_received = current_user.questions_received.order_by(Question.timestamp.desc()).all()
+  questions_sent = current_user.questions_sent.order_by(Question.timestamp.desc()).all()
 
-  return render_template('questions/list.html', questions=questions)
+  return render_template('questions/list.html', questions_received=questions_received,questions_sent=questions_sent)
 
 @questions.route('/answer/<int:id>',methods=['GET','POST'])
 @login_required

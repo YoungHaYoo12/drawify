@@ -1,10 +1,31 @@
 {% extends "base.html" %}
 {% block content %}
-{% for question in questions %}
-<h1>Question from {{question.author.username}}</h1>
-<p>{{question.drawing_id}}</p>
-<p>{{question.recipient.username}}</p>
-<p>{{question.timestamp}}</p>
-<p>{{question.answer}}</p>
-{% endfor %}
+<h4 class"text-center">Questions</h4>
+<ul class="tabs">
+  <li data-tab-target="#received" class="active tab">Received</li>
+  <li data-tab-target="#sent" class="tab">Sent</li>
+</ul>
+
+<div class="tab-content">
+  <div id="received" data-tab-content class="active pre-scrollable">
+    <h5>Received</h5>
+    {% for question in questions_received %}
+      <p>Question from {{question.author.username}}</p>
+      <p>Question to {{question.recipient.username}}</p>
+      <p>Question ID {{question.id}}</p>
+      <p>Question Answer {{question.answer}}</p>
+      <br>
+    {% endfor %}
+  </div>
+  <div id="sent" data-tab-content class="pre-scrollable">
+    <h5>Sent</h5>
+    {% for question in questions_sent %}
+      <p>Question from {{question.author.username}}</p>
+      <p>Question to {{question.recipient.username}}</p>
+      <p>Question ID {{question.id}}</p>
+      <p>Question Answer {{question.answer}}</p>      
+      <br>
+    {% endfor %}
+  </div>
+</div>
 {% endblock %}
