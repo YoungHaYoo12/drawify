@@ -102,6 +102,7 @@ class Drawing(db.Model):
     return f"<Drawing {self.filename}>"
 
 class Question(db.Model):
+  __tablename__ = 'questions'
   id = db.Column(db.Integer, primary_key=True)
   sender_id = db.Column(db.Integer, db.ForeignKey('users.id'))
   recipient_id = db.Column(db.Integer, db.ForeignKey('users.id'))
@@ -116,6 +117,7 @@ class Question(db.Model):
     return f"<Question {self.answer}>"
 
 class Notification(db.Model):
+  __tablename__ = 'notifications'
   id = db.Column(db.Integer, primary_key=True)
   name = db.Column(db.String(128), index=True)
   user_id = db.Column(db.Integer, db.ForeignKey('users.id'))
