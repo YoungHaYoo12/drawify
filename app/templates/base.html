@@ -77,7 +77,7 @@
         $(function() {
             var since = 0;
             setInterval(function() {
-                $.ajax('{{ url_for('questions.list') }}?since=' + since).done(
+                $.ajax('{{ url_for('core.notifications') }}?since=' + since).done(
                     function(notifications) {
                         for (var i = 0; i < notifications.length; i++) {
                             if (notifications[i].name == 'unread_message_count')
