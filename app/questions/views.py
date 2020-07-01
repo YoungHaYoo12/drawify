@@ -1,19 +1,24 @@
 from app import db
 from app.questions import questions
 from app.questions.forms import QuestionForm, QuestionAnswerForm,HintForm
-from app.models import Question,User,Drawing, Hint
+from app.models import Question,User,Drawing, Hint, Game
 from flask_login import login_required, current_user
 from flask import render_template, redirect, url_for, flash, abort
 from datetime import datetime
 
-@questions.route('/send_question/<recipient>/<drawing_id>',methods=['GET','POST'])
+@questions.route('/send_question/<recipient>/<drawing_id>/<game_id>',methods=['GET','POST'])
 @login_required
-def send_question(recipient,drawing_id):
+def send_question(recipient,drawing_id,game_id):
   user = User.query.filter_by(username=recipient).first_or_404()
   drawing = Drawing.query.get_or_404(drawing_id)
+  game = Game.query.get_or_404(game_id)
 
   # validate user's drawing
   if not drawing in current_user.drawings.all():
+    abort(403)
+  
+  # validate game
+  if current_user != game.author and current_user != game.guest:
     abort(403)
 
   # FOLLOWER RELATIONSHIP
@@ -29,6 +34,7 @@ def send_question(recipient,drawing_id):
     question = Question(author=current_user, recipient=user,answer=form.answer.data,drawing=drawing)
     if form.max_tries.data:
       question.max_tries = form.max_tries.data
+    question.game = game
     db.session.add(question)
     db.session.commit()
     flash('Your question has been sent.')
