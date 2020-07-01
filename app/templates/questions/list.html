@@ -1,4 +1,5 @@
 {% extends "base.html" %}
+{% import 'macros.html' as macros %}
 {% block content %}
 <div class="questions-list-wrapper">
     <h4 class="text-center">Questions</h4>
@@ -10,26 +11,12 @@
     <div class="tab-content">
       <div id="received" data-tab-content class="active ">
         {% for question in questions_received %}
-          <div class="question">
-            <div class="question-text">
-              <h2>Question from {{question.author.username}} to {{question.recipient.username}}</h2>
-            </div>
-            <div class="question-drawing">
-              <img src="{{url_for('static',filename='drawing_images/'+ question.drawing.filename)}}" width=100px height=100px>
-            </div>
-          </div>
+          {{macros.question_widget(question)}}
         {% endfor %}
       </div>
       <div id="sent" data-tab-content class="">
         {% for question in questions_sent %}
-          <div class="question">
-            <div class="question-text">
-              <h2>Question from {{question.author.username}} to {{question.recipient.username}}</h2>
-            </div>
-            <div class="question-drawing">
-              <img src="{{url_for('static',filename='drawing_images/'+ question.drawing.filename)}}" width=100px height=100px>
-            </div>
-          </div>
+          {{macros.question_widget(question)}}
         {% endfor %}
       </div>
     </div>

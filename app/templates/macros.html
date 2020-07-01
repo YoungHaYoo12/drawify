@@ -45,3 +45,14 @@
   </div>
 </div>
 {% endmacro %}
+
+{% macro question_widget(question) %}
+<div class="question">
+  <div class="question-text">
+    <h2>Question from {{question.author.username}} to {{question.recipient.username}}</h2>
+  </div>
+  <div class="question-drawing">
+    <img src="{{url_for('static',filename='drawing_images/'+ question.drawing.filename)}}" width=100px height=100px>
+  </div>
+</div>
+{% endmacro %}
