@@ -49,7 +49,9 @@
 {% macro question_widget(question) %}
 <div class="question">
   <div class="question-text">
+    <a href="{{url_for('questions.question',id=question.id)}}">
     <h2>Question from {{question.author.username}} to {{question.recipient.username}}</h2>
+    </a>
   </div>
   <div class="question-drawing">
     <img src="{{url_for('static',filename='drawing_images/'+ question.drawing.filename)}}" width=100px height=100px>

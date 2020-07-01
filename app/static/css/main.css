@@ -146,6 +146,11 @@ body {
   float:right;
 }
 
+.question a {
+  color:black;
+  text-decoration:none;
+}
+
 /* questions/question.html  */
 .questions-question-wrapper ul {
   list-style-type:none;
