@@ -160,6 +160,15 @@ class Game(db.Model):
   # user is winner if status == 'user' and vice versa
   status = db.Column(db.Enum('not_confirmed','rejected','in_progress','user','opponent'),nullable=False,server_default="not_confirmed")
   turn = db.Column(db.Enum('user','opponent','waiting_answer'),nullable=False,server_default="user")
+
+  def is_turn(self,user):
+    if user == self.author and self.turn == 'user':
+      return True
+    
+    if user == self.guest and self.turn == 'guest':
+      return True
+    
+    return False
   
   def is_user_win(self):
     return self.current_user_points >= self.max_points
