@@ -24,8 +24,8 @@ class User(db.Model,UserMixin):
   questions_received = db.relationship('Question',foreign_keys='Question.recipient_id',backref='recipient',lazy='dynamic',cascade="all, delete-orphan")
   last_question_read_time = db.Column(db.DateTime)
 
-  created_games = db.relationship('Game',foreign_keys='Game.user_id',backref='author',lazy='dynamic',cascade="all, delete-orphan")
-  invited_games = db.relationship('Game',foreign_keys='Game.opponent_id',backref='guest',lazy='dynamic',cascade="all, delete-orphan")
+  created_games = db.relationship('Game',foreign_keys='Game.author_id',backref='author',lazy='dynamic',cascade="all, delete-orphan")
+  invited_games = db.relationship('Game',foreign_keys='Game.guest_id',backref='guest',lazy='dynamic',cascade="all, delete-orphan")
 
   # Follower Functionality
   followed = db.relationship('Follow',
@@ -150,19 +150,19 @@ class Notification(db.Model):
 class Game(db.Model):
   __tablename__ = 'games'
   id = db.Column(db.Integer, primary_key=True)
-  user_id = db.Column(db.Integer, db.ForeignKey('users.id'))
-  opponent_id = db.Column(db.Integer, db.ForeignKey('users.id'))
-  current_user_points = db.Column(db.Integer, default=0)
-  current_opponent_points = db.Column(db.Integer, default=0)
+  author_id = db.Column(db.Integer, db.ForeignKey('users.id'))
+  guest_id = db.Column(db.Integer, db.ForeignKey('users.id'))
+  current_author_points = db.Column(db.Integer, default=0)
+  current_guest_points = db.Column(db.Integer, default=0)
   max_points = db.Column(db.Integer)
   questions = db.relationship('Question',backref='game',lazy='dynamic',cascade="all, delete-orphan")
 
   # user is winner if status == 'user' and vice versa
-  status = db.Column(db.Enum('not_confirmed','rejected','in_progress','user','opponent'),nullable=False,server_default="not_confirmed")
-  turn = db.Column(db.Enum('user','opponent','waiting_answer'),nullable=False,server_default="user")
+  status = db.Column(db.Enum('not_confirmed','rejected','in_progress','author','guest'),nullable=False,server_default="not_confirmed")
+  turn = db.Column(db.Enum('author','guest','waiting_answer'),nullable=False,server_default="author")
 
   def is_turn(self,user):
-    if user == self.author and self.turn == 'user':
+    if user == self.author and self.turn == 'author':
       return True
     
     if user == self.guest and self.turn == 'guest':
@@ -174,11 +174,11 @@ class Game(db.Model):
   def is_author(self,user):
     return self.author == user
   
-  def is_user_win(self):
-    return self.current_user_points >= self.max_points
+  def is_author_win(self):
+    return self.current_author_points >= self.max_points
   
-  def is_opponent_win(self):
-    return self.current_opponent_points >= self.max_points
+  def is_guest_win(self):
+    return self.current_guest_points >= self.max_points
 
   def __repr__(self):
     return f"<Game {self.id}>"
