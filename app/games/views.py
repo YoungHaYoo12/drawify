@@ -1,9 +1,21 @@
 from app import db
 from app.games import games
 from app.games.forms import AddGameForm
-from app.models import User, Game
+from app.models import User, Game, Question
 from flask import render_template, redirect, url_for,flash
 from flask_login import login_required, current_user
+
+@games.route('/game/<int:game_id>')
+@login_required
+def game(game_id):
+  # retrieve and validate game
+  game = Game.query.get_or_404(game_id)
+  if current_user != game.author and current_user != game.guest:
+    abort(403)
+  
+  questions = game.questions.order_by(Question.id.desc()).all()
+  
+  return render_template('games/game.html',game=game,questions=questions)
 
 @games.route('/list')
 @login_required
