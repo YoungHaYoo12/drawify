@@ -115,7 +115,7 @@ class Question(db.Model):
   timestamp = db.Column(db.DateTime, index=True, default=datetime.utcnow)
   max_tries = db.Column(db.Integer,default=3)
   num_of_tries = db.Column(db.Integer,default=0)
-  status = db.Column(db.Enum('complete','in_progress','lost','abandoned'),nullable=False,server_default="in_progress")
+  status = db.Column(db.Enum('complete','in_progress','lost'),nullable=False,server_default="in_progress")
   hints = db.relationship('Hint',backref='question',lazy='dynamic',cascade="all, delete-orphan")
 
   def check_answer(self,answer):
