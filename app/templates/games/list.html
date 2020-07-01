@@ -1,0 +1,23 @@
+{% extends "base.html" %}
+{% import 'macros.html' as macros %}
+{% block content %}
+<h1>Created Games</h1>
+{% for game in created_games %}
+<h3>Game {{game.id}}</h3>
+<p>Created by {{game.author.username}}</p>
+<p>Challenged {{game.guest.username}}</p>
+<p>Max Points {{game.max_points}}</p>
+<p>Current Points {{game.current_points}}</p>
+<p>Stauts {{game.status}}</p>
+{% endfor %}
+
+<h1>Invited Games</h1>
+{% for game in invited_games %}
+<h3>Game {{game.id}}</h3>
+<p>Created by {{game.author.username}}</p>
+<p>Challenged {{game.guest.username}}</p>
+<p>Max Points {{game.max_points}}</p>
+<p>Current Points {{game.current_points}}</p>
+<p>Stauts {{game.status}}</p>
+{% endfor %}
+{% endblock %}
