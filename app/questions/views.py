@@ -25,6 +25,11 @@ def send_question(recipient,drawing_id,game_id):
   if not game.is_turn(current_user):
     flash('It is currently not your turn.')
     return redirect(url_for('games.game',game_id=game.id))
+  
+  # check if game is in progress
+  if not game.status == 'in_progress':
+    flash('Game is currently not in progress.')
+    return redirect(url_for('games.game',game_id=game.id))
 
   form = QuestionForm()
 
@@ -102,8 +107,9 @@ def abandon_question(id):
 @questions.route('/question/<int:id>',methods=['GET','POST'])
 @login_required
 def question(id):
-  # retrieve and validate question
+  # retrieve and validate question and game
   question = Question.query.get_or_404(id)
+  game = question.game
   if not question in current_user.questions_received.all() and not question in current_user.questions_sent.all():
     abort(403)
   
@@ -119,12 +125,27 @@ def question(id):
     if question.check_answer(form.answer.data):
       flash('Question Answered Correctly')
       question.status = 'complete'
+      # update game
+      game.make_user_turn(current_user)
+      game.update_user_score(current_user,1)
+
+      # check if game has been won
+      if game.is_author_win():
+        game.status = 'author'
+        flash('Author Has Won!')
+      if game.is_guest_win():
+        game.status = 'guest'
+        flash('Guest Has Won!')
+
       db.session.commit()
 
     # if question lost
     elif question.check_lost():
       flash('Incorrect. You Have Run Out of Tries On This Question')
       question.status = 'lost'
+      # update game
+      game.make_user_turn(current_user)
+
       db.session.commit()
 
     else:

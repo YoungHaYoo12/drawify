@@ -174,11 +174,27 @@ class Game(db.Model):
   def is_author(self,user):
     return self.author == user
   
+  # return True if author won game
   def is_author_win(self):
     return self.current_author_points >= self.max_points
   
+  # return True if guest won game
   def is_guest_win(self):
     return self.current_guest_points >= self.max_points
+
+  # update the score of the user 
+  def update_user_score(self,user,increment):
+    if self.is_author(user):
+      self.current_author_points = self.current_author_points + increment
+    else:
+      self.current_guest_points = self.current_guest_points + increment
+  
+  # make it the user's turn
+  def make_user_turn(self,user):
+    if self.is_author(user):
+      self.turn = 'author'
+    else:
+      self.turn = 'guest'
 
   def __repr__(self):
     return f"<Game {self.id}>"
