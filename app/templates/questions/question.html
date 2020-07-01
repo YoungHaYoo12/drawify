@@ -19,6 +19,11 @@
       </div>
       {% endfor %}
       </ul>
+
+      <!-- Link to Send Hints Page if user is sender of question-->
+      {% if current_user == question.author %}
+      <a href="{{url_for('questions.send_hint',question_id=question.id)}}">Send Hint</a>
+      {% endif %}
     </div>
 
     {% if question.status == 'in_progress' and question.recipient == current_user %}
