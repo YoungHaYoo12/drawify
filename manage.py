@@ -1,7 +1,7 @@
 from flask_script import Manager, Shell
 from flask_migrate import Migrate
 from app import create_app, db
-from app.models import User, Drawing,Question,Notification
+from app.models import User, Drawing,Question,Notification,Game
 
 app = create_app('default')
 manager = Manager(app)
@@ -13,6 +13,7 @@ def make_shell_context():
               db=db,
               User=User,
               Drawing=Drawing,
+              Game=Game,
               Question=Question,
               Notification=Notification)
 manager.add_command("shell", Shell(make_context=make_shell_context))
