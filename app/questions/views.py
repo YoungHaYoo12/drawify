@@ -18,7 +18,7 @@ def send_question(recipient,drawing_id,game_id):
     abort(403)
   
   # validate game
-  if current_user != game.author and current_user != game.guest:
+  if not game.validate_players(current_user,user):
     abort(403)
 
   # Check if current user's turn
