@@ -154,7 +154,7 @@ class Game(db.Model):
   opponent_id = db.Column(db.Integer, db.ForeignKey('users.id'))
   current_points = db.Column(db.Integer, default=0)
   max_points = db.Column(db.Integer)
-  questions = db.relationship('Game',backref='game',lazy='dynamic',cascade="all, delete-orphan")
+  questions = db.relationship('Question',backref='game',lazy='dynamic',cascade="all, delete-orphan")
 
   # user is winner if status == 'user' and vice versa
   status = db.Column(db.Enum('not_confirmed','rejected','in_progress','user','opponent'),nullable=False,server_default="not_confirmed")
