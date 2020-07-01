@@ -1,8 +1,8 @@
 """First Migration.
 
-Revision ID: 2ad4625ca999
+Revision ID: 92446a55ac40
 Revises: 
-Create Date: 2020-07-01 11:13:35.166878
+Create Date: 2020-07-01 13:00:31.100891
 
 """
 from alembic import op
@@ -10,7 +10,7 @@ import sqlalchemy as sa
 
 
 # revision identifiers, used by Alembic.
-revision = '2ad4625ca999'
+revision = '92446a55ac40'
 down_revision = None
 branch_labels = None
 depends_on = None
@@ -46,15 +46,15 @@ def upgrade():
     )
     op.create_table('games',
     sa.Column('id', sa.Integer(), nullable=False),
-    sa.Column('user_id', sa.Integer(), nullable=True),
-    sa.Column('opponent_id', sa.Integer(), nullable=True),
-    sa.Column('current_user_points', sa.Integer(), nullable=True),
-    sa.Column('current_opponent_points', sa.Integer(), nullable=True),
+    sa.Column('author_id', sa.Integer(), nullable=True),
+    sa.Column('guest_id', sa.Integer(), nullable=True),
+    sa.Column('current_author_points', sa.Integer(), nullable=True),
+    sa.Column('current_guest_points', sa.Integer(), nullable=True),
     sa.Column('max_points', sa.Integer(), nullable=True),
-    sa.Column('status', sa.Enum('not_confirmed', 'rejected', 'in_progress', 'user', 'opponent'), server_default='not_confirmed', nullable=False),
-    sa.Column('turn', sa.Enum('user', 'opponent', 'waiting_answer'), server_default='user', nullable=False),
-    sa.ForeignKeyConstraint(['opponent_id'], ['users.id'], ),
-    sa.ForeignKeyConstraint(['user_id'], ['users.id'], ),
+    sa.Column('status', sa.Enum('not_confirmed', 'rejected', 'in_progress', 'author', 'guest'), server_default='not_confirmed', nullable=False),
+    sa.Column('turn', sa.Enum('author', 'guest', 'waiting_answer'), server_default='author', nullable=False),
+    sa.ForeignKeyConstraint(['author_id'], ['users.id'], ),
+    sa.ForeignKeyConstraint(['guest_id'], ['users.id'], ),
     sa.PrimaryKeyConstraint('id')
     )
     op.create_table('notifications',
