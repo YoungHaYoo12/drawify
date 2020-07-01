@@ -170,6 +170,10 @@ class Game(db.Model):
     
     return False
   
+  # returns True if user is the author of game
+  def is_author(self,user):
+    return self.author == user
+  
   def is_user_win(self):
     return self.current_user_points >= self.max_points
   
