@@ -1,8 +1,8 @@
-"""First Migration
+"""First Migration.
 
-Revision ID: d93e0efda7b6
+Revision ID: 2ad4625ca999
 Revises: 
-Create Date: 2020-07-01 10:32:44.881922
+Create Date: 2020-07-01 11:13:35.166878
 
 """
 from alembic import op
@@ -10,7 +10,7 @@ import sqlalchemy as sa
 
 
 # revision identifiers, used by Alembic.
-revision = 'd93e0efda7b6'
+revision = '2ad4625ca999'
 down_revision = None
 branch_labels = None
 depends_on = None
@@ -52,7 +52,7 @@ def upgrade():
     sa.Column('current_opponent_points', sa.Integer(), nullable=True),
     sa.Column('max_points', sa.Integer(), nullable=True),
     sa.Column('status', sa.Enum('not_confirmed', 'rejected', 'in_progress', 'user', 'opponent'), server_default='not_confirmed', nullable=False),
-    sa.Column('is_user_turn', sa.Boolean(), nullable=True),
+    sa.Column('turn', sa.Enum('user', 'opponent', 'waiting_answer'), server_default='user', nullable=False),
     sa.ForeignKeyConstraint(['opponent_id'], ['users.id'], ),
     sa.ForeignKeyConstraint(['user_id'], ['users.id'], ),
     sa.PrimaryKeyConstraint('id')
