@@ -21,7 +21,10 @@ def send_question(recipient,drawing_id,game_id):
   if current_user != game.author and current_user != game.guest:
     abort(403)
 
-  # FOLLOWER RELATIONSHIP
+  # Check if current user's turn
+  if not game.is_turn(current_user):
+    flash('It is currently not your turn.')
+    return redirect(url_for('games.game',game_id=game.id))
 
   form = QuestionForm()
 
@@ -29,6 +32,9 @@ def send_question(recipient,drawing_id,game_id):
     # Update user questions count notification
     user.add_notifications('unread_question_count',user.new_questions())
     db.session.commit()
+
+    # update game
+    game.turn = 'waiting_answer'
 
     # add new Question instance
     question = Question(author=current_user, recipient=user,answer=form.answer.data,drawing=drawing)
