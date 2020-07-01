@@ -1,27 +1,26 @@
 {% extends "base.html" %}
 {% import 'macros.html' as macros %}
 {% block content %}
-<h1>Created Games</h1>
-{% for game in created_games %}
-<h3>Game {{game.id}}</h3>
-<p>Created by {{game.author.username}}</p>
-<p>Challenged {{game.guest.username}}</p>
-<p>Max Points {{game.max_points}}</p>
-<p>Current User Points {{game.current_user_points}}</p>
-<p>Current Opponent Points {{game.current_opponent_points}}</p>
-<p>Is User Turn {{game.is_user_turn}}</p>
-<p>Stauts {{game.status}}</p>
-{% endfor %}
 
-<h1>Invited Games</h1>
-{% for game in invited_games %}
-<h3>Game {{game.id}}</h3>
-<p>Created by {{game.author.username}}</p>
-<p>Challenged {{game.guest.username}}</p>
-<p>Max Points {{game.max_points}}</p>
-<p>Current User Points {{game.current_user_points}}</p>
-<p>Current Opponent Points {{game.current_opponent_points}}</p>
-<p>Is User Turn {{game.is_user_turn}}</p>
-<p>Stauts {{game.status}}</p>
-{% endfor %}
+<div class="games-list-wrapper">
+    <h1 class="text-center">Games</h1>
+    <ul class="tabs">
+      <li data-tab-target="#author" class="active tab">Author</li>
+      <li data-tab-target="#guest" class="tab">Guest</li>
+    </ul>
+
+    <div class="tab-content">
+      <div id="author" data-tab-content class="active ">
+        {% for game in created_games %}
+          {{macros.game_widget(game)}}
+        {% endfor %}
+      </div>
+      <div id="guest" data-tab-content class="">
+        {% for game in invited_games %}
+          {{macros.game_widget(game)}}
+        {% endfor %}
+      </div>
+    </div>
+</div>
+
 {% endblock %}

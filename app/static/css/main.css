@@ -184,3 +184,16 @@ body {
 .art-gallery {
   margin-top:20px;
 }
+
+/* games/game.html */
+.game-info-section {
+  margin-bottom:35px;
+}
+
+.games-game-wrapper h4 {
+  text-indent:25px;
+}
+
+.games-game-wrapper h6 {
+  text-indent:50px;
+}

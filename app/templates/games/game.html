@@ -1,18 +1,39 @@
 {% extends "base.html" %}
 {% import 'macros.html' as macros %}
 {% block content %}
-<h1>Game Information</h1>
-<p>Created by {{game.author.username}}</p>
-<p>Challenged {{game.guest.username}}</p>
-<p>Max Points {{game.max_points}}</p>
-<p>Current User Points {{game.current_author_points}}</p>
-<p>Current Opponent Points {{game.current_guest_points}}</p>
-<p>Turn {{game.turn}}</p>
-<p>Stauts {{game.status}}</p>
 
-<h1>Questions</h1>
-{% for question in questions %}
-Question {{question.id}}
-{% endfor %}
+<div class="games-game-wrapper">
+  <div class="container jumbotron">
+    <h1 class="text-center">Game Information</h1>
+    <div class="game-info-section">
+      <h2>Players</h2>
+      <hr>
+      <h4>Author</h4>
+      <h6>{{game.author.username}} ({{game.current_author_points}} Points)</h6>
 
+      <h4>Guest</h4>
+      <h6>{{game.guest.username}} ({{game.current_guest_points}} Points)</h6>
+    </div>
+    <div class="game-info-section">
+      <h2>Logistics</h2>
+      <hr>
+      <h4>Point Goal</h4>
+      <h6>{{game.max_points}} Points</h6>
+      <h4>Turn</h4>
+      <h6>{{game.turn | capitalize}}</h6>
+      <h4>Game Status</h4>
+      <h6>{{game.status | capitalize}}</h6>
+    </div>
+    <div class="game-info-section">
+      <h2>Questions</h2>
+      <div class="game-questions pre-scrollable">
+        {% for question in questions %}
+          {% if current_user == question.author %}
+            <a href="#" class="list-group-item list-group-item-action list-group-item-success">Question (Incoming)</a>
+          {% else %}
+            <a href="#" class="list-group-item list-group-item-action list-group-item-danger">Question (Outgoing)</a>
+          {% endif %}
+        {% endfor %}
+      </div>
+    </div>
 {% endblock %}

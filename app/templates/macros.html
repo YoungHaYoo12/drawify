@@ -58,3 +58,13 @@
   </div>
 </div>
 {% endmacro %}
+
+{% macro game_widget(game) %}
+<div class="game">
+  <a href="{{url_for('games.game',game_id=game.id)}}">
+    <li class="list-group-item list-group-item-primary">
+      {{game.author.username}} VS. {{game.guest.username}}
+    </li>
+  </a>
+</div>
+{% endmacro %}
