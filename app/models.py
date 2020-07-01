@@ -157,7 +157,7 @@ class Game(db.Model):
   questions = db.relationship('Game',backref='game',lazy='dynamic',cascade="all, delete-orphan")
 
   # user is winner if status == 'user' and vice versa
-  status = db.Column(db.Enum('in_progress','user','opponent'),nullable=False,server_default="in_progress")
+  status = db.Column(db.Enum('not_confirmed','rejected','in_progress','user','opponent'),nullable=False,server_default="in_progress")
 
   def __repr__(self):
     return f"<Game {self.id}>"
