@@ -152,12 +152,23 @@ class Game(db.Model):
   id = db.Column(db.Integer, primary_key=True)
   user_id = db.Column(db.Integer, db.ForeignKey('users.id'))
   opponent_id = db.Column(db.Integer, db.ForeignKey('users.id'))
-  current_points = db.Column(db.Integer, default=0)
+  current_user_points = db.Column(db.Integer, default=0)
+  current_opponent_points = db.Column(db.Integer, default=0)
   max_points = db.Column(db.Integer)
   questions = db.relationship('Question',backref='game',lazy='dynamic',cascade="all, delete-orphan")
 
   # user is winner if status == 'user' and vice versa
   status = db.Column(db.Enum('not_confirmed','rejected','in_progress','user','opponent'),nullable=False,server_default="not_confirmed")
+  is_user_turn = db.Column(db.Boolean,default=True)
+
+  def change_turn(self):
+    self.is_user_turn = not self.is_user_turn
+  
+  def is_user_win(self):
+    return self.current_user_points >= self.max_points
+  
+  def is_opponent_win(self):
+    return self.current_opponent_points >= self.max_points
 
   def __repr__(self):
     return f"<Game {self.id}>"
