@@ -7,7 +7,9 @@
 <p>Created by {{game.author.username}}</p>
 <p>Challenged {{game.guest.username}}</p>
 <p>Max Points {{game.max_points}}</p>
-<p>Current Points {{game.current_points}}</p>
+<p>Current User Points {{game.current_user_points}}</p>
+<p>Current Opponent Points {{game.current_opponent_points}}</p>
+<p>Is User Turn {{game.is_user_turn}}</p>
 <p>Stauts {{game.status}}</p>
 {% endfor %}
 
@@ -17,7 +19,9 @@
 <p>Created by {{game.author.username}}</p>
 <p>Challenged {{game.guest.username}}</p>
 <p>Max Points {{game.max_points}}</p>
-<p>Current Points {{game.current_points}}</p>
+<p>Current User Points {{game.current_user_points}}</p>
+<p>Current Opponent Points {{game.current_opponent_points}}</p>
+<p>Is User Turn {{game.is_user_turn}}</p>
 <p>Stauts {{game.status}}</p>
 {% endfor %}
 {% endblock %}
