@@ -1,0 +1,21 @@
+{% extends "base.html" %}
+{% import 'macros.html' as macros %}
+{% block content %}
+
+{% for game in unconfirmed_games %}
+  <li class="list-group-item list-group-item-warning">
+    <h5>Game Invitation From {{game.author.username}}</h5>
+    <a href="{{url_for('games.accept_invite',game_id=game.id)}}">
+      <button class="btn btn-primary">
+        Accept
+      </button>
+    </a>
+    <a href="{{url_for('games.reject_invite',game_id=game.id)}}">
+      <button class="btn btn-danger">
+        Reject
+      </button>
+    </a>
+  </li>
+{% endfor %}
+
+{% endblock %}

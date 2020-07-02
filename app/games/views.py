@@ -2,7 +2,7 @@ from app import db
 from app.games import games
 from app.games.forms import AddGameForm
 from app.models import User, Game, Question
-from flask import render_template, redirect, url_for,flash
+from flask import render_template, redirect, url_for,flash,abort
 from flask_login import login_required, current_user
 
 @games.route('/game/<int:game_id>')
@@ -24,6 +24,18 @@ def list():
   invited_games = current_user.invited_games.all()
 
   return render_template('games/list.html',created_games=created_games,invited_games=invited_games)
+
+@games.route('/pending_invites')
+@login_required
+def pending_invites():
+  unconfirmed_games = current_user.unconfirmed_games()
+  return render_template('games/pending_invites.html',unconfirmed_games=unconfirmed_games)
+
+@games.route('/pending_answers')
+@login_required
+def pending_answers():
+  unanswered_games = current_user.unanswered_games()
+  return render_template('games/pending_answers.html',unanswered_games=unanswered_games)
 
 @games.route('/send_invite/<opponent_username>',methods=['GET','POST'])
 @login_required

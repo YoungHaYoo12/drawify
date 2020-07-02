@@ -65,6 +65,14 @@ class User(db.Model,UserMixin):
   def new_questions_content(self):
     last_read_time = self.last_question_read_time or datetime(1900,1,1)
     return Question.query.filter_by(recipient=self).filter(Question.timestamp > last_read_time).all()
+  
+  # returns games awaiting user confirmation 
+  def unconfirmed_games(self):
+    return Game.query.filter_by(guest=self).filter(Game.status == 'not_confirmed').all()
+
+  # returns games awaiting user answer
+  def unanswered_games(self,user):
+    return Game.query.filter((Game.author == user & Game.turn == 'waiting_author_answer') | (Game.guest == user & Game.turn == 'waiting_guest_answer')).all()
 
   def add_notifications(self,name,data):
     self.notifications.filter_by(name=name).delete()
