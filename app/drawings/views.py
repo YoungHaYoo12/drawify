@@ -1,17 +1,16 @@
-from flask import render_template,session,request,jsonify
+from flask import render_template,request,jsonify
 from flask_login import current_user, login_required
 from app import db
 from app.drawings import drawings
 from app.images import save_image
-from app.models import User, Drawing
+from app.models import Drawing
 
-@drawings.route('/list/<username>')
+@drawings.route('/list')
 @login_required
-def list(username):
-  user = User.query.filter_by(username=username).first_or_404()
-  drawings = user.drawings.all()
+def list():
+  drawings = current_user.drawings.all()
 
-  return render_template('drawings/list.html',drawings=drawings,user=user)
+  return render_template('drawings/list.html',drawings=drawings,user=current_user)
 
 @drawings.route('/draw')
 @login_required
