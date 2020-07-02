@@ -5,18 +5,24 @@
 <div class="games-list-wrapper">
     <h1 class="text-center">Games</h1>
     <ul class="tabs">
-      <li data-tab-target="#author" class="active tab">Author</li>
-      <li data-tab-target="#guest" class="tab">Guest</li>
+      <li data-tab-target="#in-progress" class="active tab">In Progress</li>
+      <li data-tab-target="#completed" class="tab">Archives</li>
+      <li data-tab-target="#pending" class="tab">Pending</li>
     </ul>
 
     <div class="tab-content">
-      <div id="author" data-tab-content class="active ">
-        {% for game in created_games %}
+      <div id="in-progress" data-tab-content class="active ">
+        {% for game in in_progress_games %}
           {{macros.game_widget(game)}}
         {% endfor %}
       </div>
-      <div id="guest" data-tab-content class="">
-        {% for game in invited_games %}
+      <div id="completed" data-tab-content class="">
+        {% for game in completed_games %}
+          {{macros.game_widget(game)}}
+        {% endfor %}
+      </div>
+      <div id="pending" data-tab-content class="">
+        {% for game in not_confirmed_games %}
           {{macros.game_widget(game)}}
         {% endfor %}
       </div>

@@ -20,10 +20,11 @@ def game(game_id):
 @games.route('/list')
 @login_required
 def list():
-  created_games = current_user.created_games.all()
-  invited_games = current_user.invited_games.all()
+  in_progress_games = current_user.created_games.filter(Game.status=='in_progress').all() + current_user.invited_games.filter(Game.status=='in_progress').all()
+  completed_games = current_user.created_games.filter((Game.status!='in_progress')&(Game.status!='not_confirmed')).all() + current_user.invited_games.filter((Game.status!='in_progress')&(Game.status!='not_confirmed')).all()
+  not_confirmed_games = current_user.created_games.filter(Game.status=='not_confirmed').all() + current_user.invited_games.filter(Game.status=='not_confirmed').all()
 
-  return render_template('games/list.html',created_games=created_games,invited_games=invited_games)
+  return render_template('games/list.html',in_progress_games=in_progress_games,completed_games=completed_games,not_confirmed_games=not_confirmed_games)
 
 @games.route('/pending_games')
 @login_required
