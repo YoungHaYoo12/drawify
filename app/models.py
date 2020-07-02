@@ -61,6 +61,11 @@ class User(db.Model,UserMixin):
     last_read_time = self.last_question_read_time or datetime(1900,1,1)
     return Question.query.filter_by(recipient=self).filter(Question.timestamp > last_read_time).count()
   
+  # returns a list of new questions
+  def new_questions_content(self):
+    last_read_time = self.last_question_read_time or datetime(1900,1,1)
+    return Question.query.filter_by(recipient=self).filter(Question.timestamp > last_read_time).all()
+
   def add_notifications(self,name,data):
     self.notifications.filter_by(name=name).delete()
     n = Notification(name=name, payload_json=json.dumps(data), user=self)

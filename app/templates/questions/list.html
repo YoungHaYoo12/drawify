@@ -2,23 +2,9 @@
 {% import 'macros.html' as macros %}
 {% block content %}
 <div class="questions-list-wrapper">
-    <h4 class="text-center">Questions</h4>
-    <ul class="tabs">
-      <li data-tab-target="#received" class="active tab">Received</li>
-      <li data-tab-target="#sent" class="tab">Sent</li>
-    </ul>
-
-    <div class="tab-content">
-      <div id="received" data-tab-content class="active ">
-        {% for question in questions_received %}
-          {{macros.question_widget(question)}}
-        {% endfor %}
-      </div>
-      <div id="sent" data-tab-content class="">
-        {% for question in questions_sent %}
-          {{macros.question_widget(question)}}
-        {% endfor %}
-      </div>
-    </div>
+  <h1 class="text-center">New Questions</h1>
+    {% for question in new_questions_content %}
+      {{macros.question_widget(question)}}
+    {% endfor %}
 </div>
 {% endblock %}

@@ -76,15 +76,14 @@ def send_hint(question_id):
 @questions.route('/list')
 @login_required
 def list():
+  # get all new questions 
+  new_questions_content = current_user.new_questions_content()
+
   # update last time user read questions
   current_user.last_question_read_time = datetime.utcnow()
   db.session.commit()
 
-  # load and render questions
-  questions_received = current_user.questions_received.order_by(Question.timestamp.desc()).all()
-  questions_sent = current_user.questions_sent.order_by(Question.timestamp.desc()).all()
-
-  return render_template('questions/list.html', questions_received=questions_received,questions_sent=questions_sent)
+  return render_template('questions/list.html', new_questions_content=new_questions_content)
 
 @questions.route('/question/<int:id>',methods=['GET','POST'])
 @login_required
