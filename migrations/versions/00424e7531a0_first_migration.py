@@ -1,8 +1,8 @@
 """First Migration.
 
-Revision ID: 92446a55ac40
+Revision ID: 00424e7531a0
 Revises: 
-Create Date: 2020-07-01 13:00:31.100891
+Create Date: 2020-07-02 09:55:47.327803
 
 """
 from alembic import op
@@ -10,7 +10,7 @@ import sqlalchemy as sa
 
 
 # revision identifiers, used by Alembic.
-revision = '92446a55ac40'
+revision = '00424e7531a0'
 down_revision = None
 branch_labels = None
 depends_on = None
@@ -52,7 +52,7 @@ def upgrade():
     sa.Column('current_guest_points', sa.Integer(), nullable=True),
     sa.Column('max_points', sa.Integer(), nullable=True),
     sa.Column('status', sa.Enum('not_confirmed', 'rejected', 'in_progress', 'author', 'guest'), server_default='not_confirmed', nullable=False),
-    sa.Column('turn', sa.Enum('author', 'guest', 'waiting_answer'), server_default='author', nullable=False),
+    sa.Column('turn', sa.Enum('author', 'guest', 'waiting_author_answer', 'waiting_guest_answer'), server_default='author', nullable=False),
     sa.ForeignKeyConstraint(['author_id'], ['users.id'], ),
     sa.ForeignKeyConstraint(['guest_id'], ['users.id'], ),
     sa.PrimaryKeyConstraint('id')
@@ -78,7 +78,7 @@ def upgrade():
     sa.Column('timestamp', sa.DateTime(), nullable=True),
     sa.Column('max_tries', sa.Integer(), nullable=True),
     sa.Column('num_of_tries', sa.Integer(), nullable=True),
-    sa.Column('status', sa.Enum('complete', 'in_progress', 'lost', 'abandoned'), server_default='in_progress', nullable=False),
+    sa.Column('status', sa.Enum('complete', 'in_progress', 'lost'), server_default='in_progress', nullable=False),
     sa.ForeignKeyConstraint(['drawing_id'], ['drawings.id'], ),
     sa.ForeignKeyConstraint(['game_id'], ['games.id'], ),
     sa.ForeignKeyConstraint(['recipient_id'], ['users.id'], ),
