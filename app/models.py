@@ -164,7 +164,7 @@ class Game(db.Model):
 
   # user is winner if status == 'user' and vice versa
   status = db.Column(db.Enum('not_confirmed','rejected','in_progress','author','guest'),nullable=False,server_default="not_confirmed")
-  turn = db.Column(db.Enum('author','guest','waiting_answer'),nullable=False,server_default="author")
+  turn = db.Column(db.Enum('author','guest','waiting_author_answer','waiting_guest_answer'),nullable=False,server_default="author")
 
   def is_turn(self,user):
     if user == self.author and self.turn == 'author':
@@ -175,6 +175,15 @@ class Game(db.Model):
     
     return False
   
+  # returns True if game is waiting for answer from user 
+  def is_waiting_answer_from(self,user):
+    if user == self.author and self.turn == 'waiting_author_answer':
+      return True
+    if user == self.guest and self.turn == 'waiting_guest_answer':
+      return True
+    
+    return False
+
   # returns True if user is the author of game
   def is_author(self,user):
     return self.author == user

@@ -39,7 +39,10 @@ def send_question(recipient,drawing_id,game_id):
     db.session.commit()
 
     # update game
-    game.turn = 'waiting_answer'
+    if game.is_author(current_user):
+      game.turn = 'waiting_guest_answer'
+    else:
+      game.turn = 'waiting_author_answer'
 
     # add new Question instance
     question = Question(author=current_user, recipient=user,answer=form.answer.data,drawing=drawing)
