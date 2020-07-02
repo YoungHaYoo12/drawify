@@ -179,6 +179,7 @@ class Game(db.Model):
   current_guest_points = db.Column(db.Integer, default=0)
   max_points = db.Column(db.Integer)
   questions = db.relationship('Question',backref='game',lazy='dynamic',cascade="all, delete-orphan")
+  timestamp = db.Column(db.DateTime, index=True, default=datetime.utcnow)
 
   # user is winner if status == 'user' and vice versa
   status = db.Column(db.Enum('not_confirmed','rejected','in_progress','author','guest'),nullable=False,server_default="not_confirmed")
