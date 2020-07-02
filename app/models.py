@@ -119,6 +119,7 @@ class Drawing(db.Model):
   filename = db.Column(db.String(64),unique=True)
   user_id = db.Column(db.Integer, db.ForeignKey('users.id'))
   questions = db.relationship('Question',backref='drawing',cascade="all, delete-orphan")
+  timestamp = db.Column(db.DateTime, index=True, default=datetime.utcnow)
 
   def __init__(self,filename):
     self.filename = filename
