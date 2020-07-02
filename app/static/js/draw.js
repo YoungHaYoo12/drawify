@@ -1,5 +1,5 @@
 // Ajax request if "Add Drawing" button clicked
-$('.draw-buttons').click(
+$('.add-button').click(
   () => {
     const canvas = $('#canvas')[0];
     
@@ -27,3 +27,9 @@ $('nav').hide();
 
 // hide background image
 $('body').css({'background-image':'none'});
+
+// add href links to buttons 
+var link = "/";
+$('.home-button').attr('href',link);
+var link = "/drawings/list";
+$('.my-drawings-button').attr('href',link);

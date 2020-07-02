@@ -35,8 +35,8 @@
 
     <div class="custom-buttons">
       {% for name in names %}
-        <a>
-          <button class="btn btn-info {{classes[loop.index0]}}">
+        <a class="{{classes[loop.index0]}}">
+          <button class="btn btn-info btn-lg btn-block">
             {{name}}
           </button>
         </a>

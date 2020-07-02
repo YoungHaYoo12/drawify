@@ -1,7 +1,7 @@
 {% extends "base.html" %}
 {% import 'macros.html' as macros %}
 {% block content %}
-  {{macros.canvas_set_widget(['Add Drawing'],['draw-buttons'])}}
+  {{macros.canvas_set_widget(['Add Drawing','My Drawings','Back Home'],['add-button draw-button','my-drawings-button draw-button','home-button draw-button'])}}
 {% endblock %}
 
 {% block scripts %}

@@ -31,6 +31,10 @@ body {
   padding-right: 1.3rem;
 }
 
+a:hover {
+  text-decoration:none;
+}
+
 /* canvas.html  */
 #canvas {
   position:absolute;
@@ -40,14 +44,9 @@ body {
 
 
 /* drawings/draw.html  */
-.draw-buttons {
-  width:100%;
-  height:50px;
-  display:flex;
-  justify-content:center;
-  align-items:center;
+.draw-button button {
+  margin-bottom:5px;
 }
-
 /* drawings/list.html  */
 .drawings {
   display:grid;
@@ -85,7 +84,7 @@ body {
 
 #toolbox {
   display:grid;
-  grid-template-rows: 5fr 1fr;
+  grid-template-rows: 5fr 2fr;
 }
 
 /* questions/list.html  */
