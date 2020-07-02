@@ -2,8 +2,11 @@
 {% import 'macros.html' as macros %}
 {% block content %}
 
+<div class="container">
+<h1 class="text-center">Pending Games</h1>
+
 {% for game in unconfirmed_games %}
-  <li class="list-group-item list-group-item-warning">
+  <li class="list-group-item list-group-item-info">
     <h5>Game Invitation From {{game.author.username}}</h5>
     <a href="{{url_for('games.accept_invite',game_id=game.id)}}">
       <button class="btn btn-primary">
@@ -18,9 +21,8 @@
   </li>
 {% endfor %}
 
-
 {% for game in unanswered_games %}
-  <li class="list-group-item list-group-item-warning">
+  <li class="list-group-item list-group-item-info">
     <h5>Game Waiting Answer</h5>
     <a href="{{url_for('games.game',game_id=game.id)}}">
       <button class="btn btn-primary">
@@ -29,5 +31,5 @@
     </a>
   </li>
 {% endfor %}
-
+</div>
 {% endblock %}

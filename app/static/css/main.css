@@ -125,20 +125,6 @@ body {
   height:100%;
 }
 
-.questions-list-wrapper {
-  height:100%;
-  width:60%;
-  padding:30px;
-  background-color:rgba(255,255,255,0.8);
-  margin:auto;
-}
-
-.questions-list-wrapper .question {
-  background-color:#FDAB9F;
-  margin-top:30px;
-  border:solid black 1px;
-}
-
 .question a {
   color:black;
   text-decoration:none;
