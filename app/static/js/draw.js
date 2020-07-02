@@ -15,7 +15,8 @@ $('.add-button').click(
   .done(
     function(data) {
      if (data.result == 'success') {
-       console.log('SUCCESS')
+       console.log('SUCCESS');
+       $('#successModal').modal('show');
      }
     }
   )
