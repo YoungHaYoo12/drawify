@@ -8,7 +8,7 @@ from app.models import Drawing
 @drawings.route('/list')
 @login_required
 def list():
-  drawings = current_user.drawings.all()
+  drawings = current_user.drawings.order_by(Drawing.timestamp.desc()).all()
 
   return render_template('drawings/list.html',drawings=drawings,user=current_user)
 

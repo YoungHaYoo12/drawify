@@ -16,7 +16,7 @@ def choose_send_question(recipient,game_id):
   if not game.validate_players(current_user,user):
     abort(403)
   
-  drawings = current_user.drawings.all()
+  drawings = current_user.drawings.order_by(Drawing.timestamp.desc()).all()
 
   return render_template('questions/choose_send_question.html',drawings=drawings,recipient=recipient,game_id=game_id)
 
