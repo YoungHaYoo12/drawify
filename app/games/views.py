@@ -25,17 +25,12 @@ def list():
 
   return render_template('games/list.html',created_games=created_games,invited_games=invited_games)
 
-@games.route('/pending_invites')
+@games.route('/pending_games')
 @login_required
-def pending_invites():
+def pending_games():
   unconfirmed_games = current_user.unconfirmed_games()
-  return render_template('games/pending_invites.html',unconfirmed_games=unconfirmed_games)
-
-@games.route('/pending_answers')
-@login_required
-def pending_answers():
   unanswered_games = current_user.unanswered_games()
-  return render_template('games/pending_answers.html',unanswered_games=unanswered_games)
+  return render_template('games/pending_games.html',unconfirmed_games=unconfirmed_games,unanswered_games=unanswered_games)
 
 @games.route('/send_invite/<opponent_username>',methods=['GET','POST'])
 @login_required
