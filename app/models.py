@@ -71,8 +71,8 @@ class User(db.Model,UserMixin):
     return Game.query.filter_by(guest=self).filter(Game.status == 'not_confirmed').all()
 
   # returns games awaiting user answer
-  def unanswered_games(self,user):
-    return Game.query.filter((Game.author == user & Game.turn == 'waiting_author_answer') | (Game.guest == user & Game.turn == 'waiting_guest_answer')).all()
+  def unanswered_games(self):
+    return Game.query.filter(((Game.author == self) & (Game.turn == 'waiting_author_answer')) | ((Game.guest == self) & (Game.turn == 'waiting_guest_answer'))).all()
 
   def add_notifications(self,name,data):
     self.notifications.filter_by(name=name).delete()
