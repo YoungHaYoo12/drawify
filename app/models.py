@@ -74,6 +74,15 @@ class User(db.Model,UserMixin):
   def unanswered_games(self):
     return Game.query.filter(((Game.author == self) & (Game.turn == 'waiting_author_answer')) | ((Game.guest == self) & (Game.turn == 'waiting_guest_answer'))).all()
 
+  # returns games awaiting user confirmation 
+  def unconfirmed_games_count(self):
+    return Game.query.filter_by(guest=self).filter(Game.status == 'not_confirmed').count()
+
+  # returns games awaiting user answer
+  def unanswered_games_count(self):
+    return Game.query.filter(((Game.author == self) & (Game.turn == 'waiting_author_answer')) | ((Game.guest == self) & (Game.turn == 'waiting_guest_answer'))).count()
+
+
   def add_notifications(self,name,data):
     self.notifications.filter_by(name=name).delete()
     n = Notification(name=name, payload_json=json.dumps(data), user=self)

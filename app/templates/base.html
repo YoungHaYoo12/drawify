@@ -32,22 +32,36 @@
         <li class="nav-item">
           <a class="nav-link" href="{{url_for('games.list')}}">My Games</a>
         </li>
-        <li class="nav-item">
-          <a class="nav-link" href="{{url_for('games.pending_invites')}}">Pending Game Invites</a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link" href="{{url_for('games.pending_answers')}}">Pending Game Answers</a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link" href="{{url_for('questions.list')}}">
-            New Questions
-            {% set new_questions = current_user.new_questions() %}
-            <span id="question_count" class="badge"
-            style="visibility: {% if new_questions %}visible{% else %}hidden {% endif %};">
-              {{ new_questions }}
-            </span>
+
+        <li class="nav-item dropdown">
+          <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+            Inbox
+              {% set total = current_user.new_questions() + current_user.unconfirmed_games_count() + current_user.unanswered_games_count() %}
+              <span id="question_count" class="badge badge-info"
+              style="visibility: {% if total %}visible{% else %}hidden {% endif %};">
+                {{ total }}
+              </span>
           </a>
+          <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+            <a class="dropdown-item" href="{{url_for('questions.list')}}">
+              New Questions
+              {% set new_questions = current_user.new_questions() %}
+              <span id="question_count" class="badge badge-info"
+              style="visibility: {% if new_questions %}visible{% else %}hidden {% endif %};">
+                {{ new_questions }}
+              </span>
+            </a>
+            <a class="dropdown-item" href="{{url_for('games.pending_games')}}">
+              Pending Games
+              {% set pending_games = current_user.unconfirmed_games_count() + current_user.unanswered_games_count() %}
+              <span id="question_count" class="badge badge-info"
+              style="visibility: {% if pending_games %}visible{% else %}hidden {% endif %};">
+                {{ pending_games }}
+              </span>
+            </a>
+          </div>
         </li>
+
         <li class="nav-item">
           <a class="nav-link" href="{{url_for('auth.logout')}}">Logout</a>
         </li>
