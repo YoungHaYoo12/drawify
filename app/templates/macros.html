@@ -48,14 +48,18 @@
 
 {% macro question_widget(question) %}
 <div class="question">
-  <div class="question-text">
-    <a href="{{url_for('questions.question',id=question.id)}}">
-    <h2>Question from {{question.author.username}} to {{question.recipient.username}}</h2>
-    </a>
-  </div>
-  <div class="question-drawing">
-    <img src="{{url_for('static',filename='drawing_images/'+ question.drawing.filename)}}" width=100px height=100px>
-  </div>
+  <li class="list-group-item list-group-item-info">
+        <a href="{{url_for('games.game',game_id=question.game.id)}}">
+          <h3>
+          Game Against {{question.author.username}}
+          </h3>
+        </a>
+        <a href="{{url_for('questions.question',id=question.id)}}">
+          <button class="btn btn-primary">
+            View Question
+          </button>
+        </a>
+  </li>
 </div>
 {% endmacro %}
 

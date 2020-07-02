@@ -29,9 +29,9 @@
       <div class="game-questions pre-scrollable">
         {% for question in questions %}
           {% if current_user == question.author %}
-            <a href="#" class="list-group-item list-group-item-action list-group-item-success">Question (Incoming)</a>
+            <a href="{{url_for('questions.question',id=question.id)}}" class="list-group-item list-group-item-action list-group-item-success">Question (Incoming)</a>
           {% else %}
-            <a href="#" class="list-group-item list-group-item-action list-group-item-danger">Question (Outgoing)</a>
+            <a href="{{url_for('questions.question',id=question.id)}}" class="list-group-item list-group-item-action list-group-item-danger">Question (Outgoing)</a>
           {% endif %}
         {% endfor %}
       </div>

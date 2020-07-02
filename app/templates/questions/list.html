@@ -3,6 +3,11 @@
 {% block content %}
 <div class="questions-list-wrapper">
   <h1 class="text-center">New Questions</h1>
+    {% if new_questions_content|length == 0 %}
+    <p class="text-center text-muted">
+      You have no new questions in your questions inbox.
+    </p>
+    {% endif %}
     {% for question in new_questions_content %}
       {{macros.question_widget(question)}}
     {% endfor %}
