@@ -6,6 +6,20 @@ from flask_login import login_required, current_user
 from flask import render_template, redirect, url_for, flash, abort
 from datetime import datetime
 
+@questions.route('/choose_send_question/<recipient>/<game_id>')
+@login_required
+def choose_send_question(recipient,game_id):
+  user = User.query.filter_by(username=recipient).first_or_404()
+  game = Game.query.get_or_404(game_id)
+
+  # validate game
+  if not game.validate_players(current_user,user):
+    abort(403)
+  
+  drawings = current_user.drawings.all()
+
+  return render_template('questions/choose_send_question.html',drawings=drawings,recipient=recipient,game_id=game_id)
+
 @questions.route('/send_question/<recipient>/<drawing_id>/<game_id>',methods=['GET','POST'])
 @login_required
 def send_question(recipient,drawing_id,game_id):

@@ -1,0 +1,17 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="drawings-list-wrapper text-center">
+<h1>Choose Drawing to Send to {{recipient}}</h1>
+  <div class="container">
+    <div class="drawings">
+      {% for drawing in drawings %}
+      <div class="drawing">
+        <a href="{{url_for('questions.send_question',recipient=recipient,game_id=game_id,drawing_id=drawing.id)}}">
+        <img src="{{url_for('static',filename='drawing_images/'+drawing.filename)}}" width=300px height=300px>
+        </a>
+      </div>
+      {% endfor %}
+    </div>
+  </div>
+</div>
+{% endblock %}

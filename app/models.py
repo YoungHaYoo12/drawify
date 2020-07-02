@@ -230,6 +230,13 @@ class Game(db.Model):
   # validate that user1 and user2 are both players of the game
   def validate_players(self,user1,user2):
     return (user1 == self.author and user2 == self.guest) or (user1 == self.guest and user2 == self.author)
+  
+  # returns the user's opponent
+  def get_opponent(self,user):
+    if self.is_author(user):
+      return self.guest
+    else:
+      return self.author
 
   def __repr__(self):
     return f"<Game {self.id}>"
