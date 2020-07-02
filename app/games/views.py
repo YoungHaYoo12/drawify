@@ -47,7 +47,7 @@ def send_invite(opponent_username):
     db.session.add(game)
     db.session.commit()
     flash('Game Invitation Sent')
-    return redirect(url_for('core.user',username=opponent_username))
+    return redirect(url_for('games.game',game_id=game.id))
   
   return render_template('games/send_invite.html',form=form,opponent=opponent)
 
@@ -60,18 +60,18 @@ def accept_invite(game_id):
   # if user is not the game guest
   if current_user != game.guest:
     flash('You have not been invited to the following game.')
-    return redirect(url_for('core.user',username=current_user.username))
+    return redirect(url_for('games.game',game_id=game.id))
 
   # if game is not 'not_confirmed'
   if game.status != 'not_confirmed':
     flash('The current game is not awaiting confirmation.')
-    return redirect(url_for('core.user',username=current_user.username))
+    return redirect(url_for('games.game',game_id=game.id))
   
   # accept game
   game.status = 'in_progress'
   db.session.commit()
 
-  return redirect(url_for('core.user',username=game.author.username))
+  return redirect(url_for('games.game',game_id=game.id))
 
 @games.route('/reject_invite/<int:game_id>')
 @login_required
@@ -82,15 +82,15 @@ def reject_invite(game_id):
   # if user is not the game guest
   if current_user != game.guest:
     flash('You have not been invited to the following game.')
-    return redirect(url_for('core.user',username=current_user.username))
+    return redirect(url_for('games.game',game_id=game.id))
 
   # if game is not 'not_confirmed'
   if game.status != 'not_confirmed':
     flash('The current game is not awaiting confirmation.')
-    return redirect(url_for('core.user',username=current_user.username))
+    return redirect(url_for('games.game',game_id=game.id))
   
   # reject game
   game.status = 'rejected'
   db.session.commit()
 
-  return redirect(url_for('core.user',username=game.author.username))
+  return redirect(url_for('games.game',game_id=game.id))

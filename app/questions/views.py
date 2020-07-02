@@ -52,7 +52,7 @@ def send_question(recipient,drawing_id,game_id):
     db.session.add(question)
     db.session.commit()
     flash('Your question has been sent.')
-    return redirect(url_for('core.index'))
+    return redirect(url_for('games.game',game_id=question.game.id))
 
   return render_template('questions/send_question.html',form=form,recipient=recipient)
 
@@ -72,7 +72,7 @@ def send_hint(question_id):
     db.session.add(hint)
     db.session.commit()
     flash('Hint Successfully Submitted')
-    return redirect(url_for('questions.list'))
+    return redirect(url_for('questions.question',id=question.id))
 
   return render_template('questions/send_hint.html',form=form)
 
