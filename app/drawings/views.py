@@ -1,4 +1,4 @@
-from flask import render_template,request,jsonify
+from flask import abort,render_template,redirect,url_for,request,jsonify
 from flask_login import current_user, login_required
 from app import db
 from app.drawings import drawings
@@ -14,6 +14,14 @@ def list():
   drawings=pagination.items
 
   return render_template('drawings/list.html',drawings=drawings,pagination=pagination,user=current_user)
+
+@drawings.route('/<drawing_id>')
+@login_required
+def drawing(drawing_id):
+  # retrieve and validate drawing
+  drawing = Drawing.query.get_or_404(drawing_id)
+
+  return render_template('drawings/drawing.html',drawing=drawing)
 
 @drawings.route('/draw')
 @login_required

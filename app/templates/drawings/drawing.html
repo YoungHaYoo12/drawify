@@ -1,0 +1,11 @@
+{% extends "base.html" %}
+{% block content %}]
+<div class="drawings-drawing-wrapper">
+<div class="container">
+  <div class="jumbotron text-center">
+    <h1>Drawing</h1>
+      <img src="{{url_for('static',filename='drawing_images/'+drawing.filename)}}" width=300px height=300px>
+  </div>
+</div>
+</div>
+{% endblock %}

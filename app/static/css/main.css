@@ -48,6 +48,11 @@ a:hover {
   left:0px;
 }
 
+/* drawings/drawing.html  */
+.drawings-drawing-wrapper img {
+  background-color:white;
+  border: solid black 1px;
+}
 
 /* drawings/draw.html  */
 .draw-button button {

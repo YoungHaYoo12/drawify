@@ -7,7 +7,9 @@
     <div class="drawings">
       {% for drawing in drawings %}
       <div class="drawing">
+        <a href="{{url_for('drawings.drawing',drawing_id=drawing.id)}}">
         <img src="{{url_for('static',filename='drawing_images/'+drawing.filename)}}" width=300px height=300px>
+        </a>
       </div>
       {% endfor %}
     </div>
