@@ -108,14 +108,15 @@ a:hover {
 .tab {
   cursor:pointer;
   padding:10px;
+  background-color: rgb(255,255,255);
 }
 
 .tab:hover {
-  background-color: rgb(255, 255, 255);
+  background-color: gray;
 }
 
 .tab.active {
-  background-color: rgb(255, 255, 255);
+  background-color: rgb(129,192,192);
 }
 
 .tab-content {
