@@ -3,12 +3,14 @@ from app.questions import questions
 from app.questions.forms import QuestionForm, QuestionAnswerForm,HintForm
 from app.models import Question,User,Drawing, Hint, Game
 from flask_login import login_required, current_user
-from flask import render_template, redirect, url_for, flash, abort
+from flask import render_template, redirect, url_for, flash, abort,request
 from datetime import datetime
 
 @questions.route('/choose_send_question/<recipient>/<game_id>')
 @login_required
 def choose_send_question(recipient,game_id):
+  page = request.args.get('page',1,type=int)
+
   user = User.query.filter_by(username=recipient).first_or_404()
   game = Game.query.get_or_404(game_id)
 
@@ -16,9 +18,10 @@ def choose_send_question(recipient,game_id):
   if not game.validate_players(current_user,user):
     abort(403)
   
-  drawings = current_user.drawings.order_by(Drawing.timestamp.desc()).all()
+  pagination = current_user.drawings.order_by(Drawing.timestamp.desc()).paginate(page=page,per_page=9)
+  drawings = pagination.items
 
-  return render_template('questions/choose_send_question.html',drawings=drawings,recipient=recipient,game_id=game_id)
+  return render_template('questions/choose_send_question.html',drawings=drawings,pagination=pagination,recipient=recipient,game_id=game_id)
 
 @questions.route('/send_question/<recipient>/<drawing_id>/<game_id>',methods=['GET','POST'])
 @login_required

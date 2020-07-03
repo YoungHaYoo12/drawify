@@ -8,9 +8,12 @@ from app.models import Drawing
 @drawings.route('/list')
 @login_required
 def list():
-  drawings = current_user.drawings.order_by(Drawing.timestamp.desc()).all()
+  page = request.args.get('page',1,type=int)
 
-  return render_template('drawings/list.html',drawings=drawings,user=current_user)
+  pagination = current_user.drawings.order_by(Drawing.timestamp.desc()).paginate(page=page,per_page=9)
+  drawings=pagination.items
+
+  return render_template('drawings/list.html',drawings=drawings,pagination=pagination,user=current_user)
 
 @drawings.route('/draw')
 @login_required

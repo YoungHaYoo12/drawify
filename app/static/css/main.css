@@ -6,6 +6,12 @@
   transform:translate(-50%, -50%);
 }
 
+.pagination-wrapper {
+  display:flex;
+  justify-content:center;
+  margin-top:15px;
+}
+
 /* base.html  */
 body {
   background-image: url('/static/images/background.jpg');
