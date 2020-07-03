@@ -4,6 +4,10 @@
 <div class="questions-question-wrapper">
   <div class="container jumbotron">
     <h1 class="text-center">Drawing {{question.drawing_id}}</h1>
+    <hr>
+    <div class="text-center">
+      <img src="{{url_for('static',filename='drawing_images/'+question.drawing.filename)}}" width=300px height=300px>
+    </div>
     <h5>Current Number of Tries: {{question.num_of_tries}}</h5>
     <h5>Maximum Number of Tries: {{question.max_tries}}</h5>
     <h5>Status: {{question.status | capitalize}}</h5>

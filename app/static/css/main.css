@@ -167,6 +167,12 @@ a:hover {
   cursor:pointer;
 }
 
+.questions-question-wrapper img {
+  background-color:white;
+  border:solid black 1px;
+  margin-bottom:20px;
+}
+
 /* auth/register.html and auth/login.html */
 .jumbotron {
   border:solid black 2px;
