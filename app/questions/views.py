@@ -140,6 +140,8 @@ def question(id):
 
       db.session.commit()
 
+      return redirect(url_for('games.game',game_id=question.game.id))
+
     # if question lost
     elif question.check_lost():
       flash('Incorrect. You Have Run Out of Tries On This Question')
@@ -148,6 +150,8 @@ def question(id):
       game.make_user_turn(current_user)
 
       db.session.commit()
+
+      return redirect(url_for('games.game',game_id=question.game.id))
 
     else:
       flash('Incorrect. Please Try Again.')
