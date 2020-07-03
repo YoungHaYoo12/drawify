@@ -30,8 +30,7 @@ def list():
 @login_required
 def pending_games():
   unconfirmed_games = current_user.unconfirmed_games()
-  unanswered_games = current_user.unanswered_games()
-  return render_template('games/pending_games.html',unconfirmed_games=unconfirmed_games,unanswered_games=unanswered_games)
+  return render_template('games/pending_games.html',unconfirmed_games=unconfirmed_games)
 
 @games.route('/send_invite/<opponent_username>',methods=['GET','POST'])
 @login_required
