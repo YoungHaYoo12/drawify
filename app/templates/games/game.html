@@ -1,15 +1,37 @@
 {% extends "base.html" %}
 {% import 'macros.html' as macros %}
 {% block content %}
-
 <div class="games-game-wrapper">
   <div class="container jumbotron">
     <h1 class="text-center">Game Information</h1>
+    <div class="status-message">
+      <h2 class="text-center">
+        {% if game.status == 'rejected' %}
+        Game Has Been Rejected.
+        {% elif game.status == 'not_confirmed' %}
+        Waiting for Game Confirmation
+        {% elif game.is_user_win(current_user) %}
+        Congratulations, You Have Won!
+        {% elif game.is_user_loss(current_user) %}
+        You Have Lost.
+        {% elif game.is_turn(current_user) %}
+        Ask Your Opponent A Question!
+        {% elif game.is_waiting_answer_from(current_user) %}
+        Answer Your Opponent's Question!
+        {% elif game.is_turn(game.get_opponent(current_user)) %}
+        Waiting For Opponent to Ask A Question!
+        {% else %}
+        Waiting For Opponent Answer Your Question!
+        {% endif %}
+      </h2>
+    </div>
+    {% if game.is_turn(current_user) %}
     <div class="text-center">
     <a href="{{url_for('questions.choose_send_question',game_id=game.id,recipient=game.get_opponent(current_user).username)}}">
       <button class="btn btn-primary">Send Question</button>
     </a>
     </div>
+    {% endif %}
     <div class="game-info-section">
       <h2>Players</h2>
       <hr>
@@ -24,10 +46,6 @@
       <hr>
       <h4>Point Goal</h4>
       <h6>{{game.max_points}} Points</h6>
-      <h4>Turn</h4>
-      <h6>{{game.turn | capitalize}}</h6>
-      <h4>Game Status</h4>
-      <h6>{{game.status | capitalize}}</h6>
     </div>
     <div class="game-info-section">
       <h2>Questions</h2>

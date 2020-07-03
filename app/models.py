@@ -214,6 +214,20 @@ class Game(db.Model):
   # return True if guest won game
   def is_guest_win(self):
     return self.current_guest_points >= self.max_points
+  
+  # returns True if user has won game
+  def is_user_win(self,user):
+    if self.is_author(user):
+      return self.is_author_win()
+    else:
+      return self.is_guest_win()
+
+  # returns True if user has won game
+  def is_user_loss(self,user):
+    if self.is_author(user):
+      return self.is_guest_win()
+    else:
+      return self.is_author_win()
 
   # update the score of the user 
   def update_user_score(self,user,increment):

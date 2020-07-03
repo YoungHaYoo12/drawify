@@ -184,3 +184,7 @@ a:hover {
 .games-game-wrapper h6 {
   text-indent:50px;
 }
+
+.status-message {
+  color:rgb(105,105,105);
+}

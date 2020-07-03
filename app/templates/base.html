@@ -36,7 +36,7 @@
         <li class="nav-item dropdown">
           <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
             Inbox
-              {% set total = current_user.new_questions() + current_user.unconfirmed_games_count() + current_user.unanswered_games_count() %}
+              {% set total = current_user.new_questions() + current_user.unconfirmed_games_count() %}
               <span id="question_count" class="badge badge-info"
               style="visibility: {% if total %}visible{% else %}hidden {% endif %};">
                 {{ total }}
@@ -53,7 +53,7 @@
             </a>
             <a class="dropdown-item" href="{{url_for('games.pending_games')}}">
               Pending Games
-              {% set pending_games = current_user.unconfirmed_games_count() + current_user.unanswered_games_count() %}
+              {% set pending_games = current_user.unconfirmed_games_count() %}
               <span id="question_count" class="badge badge-info"
               style="visibility: {% if pending_games %}visible{% else %}hidden {% endif %};">
                 {{ pending_games }}
