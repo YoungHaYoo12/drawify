@@ -1,4 +1,4 @@
-from flask import abort,render_template,redirect,url_for,request,jsonify
+from flask import abort,render_template,redirect,url_for,request,jsonify,flash
 from flask_login import current_user, login_required
 from app import db
 from app.drawings import drawings
@@ -49,10 +49,12 @@ def add_to_display(drawing_id):
   drawing = Drawing.query.get_or_404(drawing_id)
   if current_user != drawing.user:
     abort(403)
-  
-  # set drawing display to True
-  drawing.display = True
-  db.session.commit()
+  if drawing.display:
+    flash('Drawing Already On Display')
+  else:
+    # set drawing display to True
+    drawing.display = True
+    db.session.commit()
 
   return redirect(url_for('core.user',username=current_user.username))
 
@@ -63,9 +65,11 @@ def remove_from_display(drawing_id):
   drawing = Drawing.query.get_or_404(drawing_id)
   if current_user != drawing.user:
     abort(403)
-  
-  # set drawing display to False
-  drawing.display = False
-  db.session.commit()
+  if drawing.display:
+    # set drawing display to False
+    drawing.display = False
+    db.session.commit()
+  else:
+    flash('Drawing Not Currently On Display')
   
   return redirect(url_for('core.user',username=current_user.username))
