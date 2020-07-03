@@ -31,6 +31,13 @@
   <!-- Selected Art Gallery -->
   <div class="art-gallery">
     <h5>Selected Art Gallery</h5>
+    <div class="drawings">
+      {% for drawing in drawings %}
+      <div class="drawing">
+        <img src="{{url_for('static',filename='drawing_images/'+drawing.filename)}}" width=300px height=300px>
+      </div>
+      {% endfor %}
+    </div>
   </div>
 </div>
 {% endblock %}

@@ -2,7 +2,7 @@ from flask import render_template, request,jsonify,flash, redirect,url_for
 from flask_login import login_required, current_user
 from app import db
 from app.core import core
-from app.models import Notification,User
+from app.models import Notification,User,Drawing
 
 @core.route('/')
 def index():
@@ -11,9 +11,12 @@ def index():
 @core.route('/user/<username>')
 @login_required
 def user(username):
+  page = request.args.get('page',1,type=int)
   user = User.query.filter_by(username=username).first_or_404()
+  pagination = user.drawings.filter(Drawing.display==True).order_by(Drawing.timestamp.desc()).paginate(page=page,per_page=9)
+  drawings = pagination.items
 
-  return render_template('core/user.html',user=user)
+  return render_template('core/user.html',user=user,pagination=pagination,drawings=drawings)
 
 @core.route('/notifications')
 @login_required

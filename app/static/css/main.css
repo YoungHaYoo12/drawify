@@ -52,6 +52,7 @@ a:hover {
 .drawings-drawing-wrapper img {
   background-color:white;
   border: solid black 1px;
+  margin-bottom:20px;
 }
 
 /* drawings/draw.html  */

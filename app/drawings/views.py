@@ -41,3 +41,31 @@ def add():
   return jsonify({
     'result':'success',
   })
+
+@drawings.route('/add_to_display/<drawing_id>')
+@login_required
+def add_to_display(drawing_id):
+  # retrieve and validate drawing
+  drawing = Drawing.query.get_or_404(drawing_id)
+  if current_user != drawing.user:
+    abort(403)
+  
+  # set drawing display to True
+  drawing.display = True
+  db.session.commit()
+
+  return redirect(url_for('core.user',username=current_user.username))
+
+@drawings.route('/remove_from_display/<drawing_id>')
+@login_required
+def remove_from_display(drawing_id):
+  # retrieve and validate drawing
+  drawing = Drawing.query.get_or_404(drawing_id)
+  if current_user != drawing.user:
+    abort(403)
+  
+  # set drawing display to False
+  drawing.display = False
+  db.session.commit()
+  
+  return redirect(url_for('core.user',username=current_user.username))
