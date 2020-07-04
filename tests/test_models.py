@@ -2,7 +2,150 @@ from base_cases import FlaskTestCase
 from app.models import Drawing,Game,Hint,Question,User
 from app import db
 from datetime import datetime
+from sqlalchemy.exc import IntegrityError
 
+class UserModelTestCase(FlaskTestCase):
+  """
+  def test_password_setter(self):
+    u = User(username='one',email='one@one.com',password='one')
+    self.assertTrue(u.password_hash is not None)
+  
+  def test_no_password_getter(self):
+    u = User(username='one',email='one@one.com',password='one')
+    with self.assertRaises(AttributeError):
+      u.password
+  
+  def test_password_verification(self):
+    u = User(username='one',email='one@one.com',password='one')
+    self.assertTrue(u.verify_password('one'))
+    self.assertFalse(u.verify_password('two'))
+  
+  def test_password_salts_are_random(self):
+    u1 = User(username='one',email='one@one.com',password='one')
+    u2 = User(username='one',email='one@one.com',password='one')
+    self.assertTrue(u1.password_hash != u2.password_hash)
+
+  def test_attributes(self):
+    before = datetime.utcnow()
+    u1 = User(email='test@test.com',username='test',password='test')
+    u1.last_question_read_time = datetime.utcnow()
+    db.session.add(u1)
+    db.session.commit()
+    after = datetime.utcnow()
+
+    self.assertEqual(u1.email,'test@test.com')
+    self.assertEqual(u1.username,'test')
+    self.assertEqual(u1.id,1)
+    self.assertEqual(u1.__repr__(),'<User test>')
+    self.assertEqual(u1.__tablename__, 'users')
+    self.assertTrue(u1.last_question_read_time > before and u1.last_question_read_time < after)
+
+  
+  def test_non_unique_email(self):
+    u1 = User(email='one@one.com', username='one', password='one')
+    u2 = User(email='one@one.com',username='two',password='two')
+
+    db.session.add(u1)
+    db.session.commit()
+
+    with self.assertRaises(IntegrityError):
+      db.session.add(u2)
+      db.session.commit()
+
+  def test_non_unique_username(self):
+    u1 = User(email='one@one.com', username='one', password='one')
+    u2 = User(email='two@two.com',username='one',password='two')
+
+    db.session.add(u1)
+    db.session.commit()
+
+    with self.assertRaises(IntegrityError):
+      db.session.add(u2)
+      db.session.commit()
+  """
+  def test_friendship_functionality(self):
+    u1 = User(email='one@one.com', username='one', password='one')
+    u2 = User(email='two@two.com',username='two',password='two')
+    db.session.add_all([u1,u2])
+    db.session.commit()
+
+    # before being friends
+    self.assertEqual(len(u1.invitees.all()),0)
+    self.assertEqual(len(u1.inviters.all()),0)
+    self.assertEqual(len(u1.friends().all()),0)
+    self.assertEqual(len(u2.invitees.all()),0)
+    self.assertEqual(len(u2.inviters.all()),0)
+    self.assertEqual(len(u2.friends().all()),0)
+    self.assertFalse(u1.is_friends_with(u2))
+    self.assertEqual(len(u2.pending_friend_requests().all()),0)
+    self.assertEqual(u2.pending_friend_requests_count(),0)
+    self.assertFalse(u1.sent_friend_request_to(u2))
+    self.assertTrue(u1.can_send_friend_request_to(u2))
+
+    # after friend request sent (from u1 to u2)
+    u1.send_friend_request_to(u2)
+    self.assertEqual(len(u1.invitees.all()),1)
+    self.assertEqual(len(u2.inviters.all()),1)
+    self.assertEqual(len(u2.pending_friend_requests().all()),1)
+    self.assertEqual(u2.pending_friend_requests_count(),1)
+    self.assertTrue(u1.sent_friend_request_to(u2))
+    self.assertFalse(u1.can_send_friend_request_to(u2))
+
+    # after friend request accepted (by u2)
+    u2.accept_friend_request_from(u1)
+    self.assertTrue(u1.is_friends_with(u2))
+    self.assertEqual(len(u1.invitees.all()),1)
+    self.assertEqual(len(u1.inviters.all()),0)
+    self.assertEqual(len(u1.friends().all()),1)
+    self.assertEqual(len(u2.invitees.all()),0)
+    self.assertEqual(len(u2.inviters.all()),1)
+    self.assertEqual(len(u2.friends().all()),1)
+    self.assertEqual(len(u2.pending_friend_requests().all()),0)
+    self.assertEqual(u2.pending_friend_requests_count(),0)
+    self.assertFalse(u1.sent_friend_request_to(u2))
+    self.assertFalse(u1.can_send_friend_request_to(u2))
+
+    # after remove friend
+    u1.remove_friend(u2)
+    self.assertFalse(u1.is_friends_with(u2))
+    self.assertEqual(len(u1.invitees.all()),0)
+    self.assertEqual(len(u1.inviters.all()),0)
+    self.assertEqual(len(u1.friends().all()),0)
+    self.assertEqual(len(u2.invitees.all()),0)
+    self.assertEqual(len(u2.inviters.all()),0)
+    self.assertEqual(len(u2.friends().all()),0)
+    self.assertEqual(len(u2.pending_friend_requests().all()),0)
+    self.assertEqual(u2.pending_friend_requests_count(),0)
+    self.assertFalse(u1.sent_friend_request_to(u2))
+    self.assertTrue(u1.can_send_friend_request_to(u2))
+
+    # test friend acceptance decline
+    u2.send_friend_request_to(u1)
+    self.assertEqual(len(u1.invitees.all()),0)
+    self.assertEqual(len(u1.inviters.all()),1)
+    self.assertEqual(len(u1.friends().all()),0)
+    self.assertEqual(len(u2.invitees.all()),1)
+    self.assertEqual(len(u2.inviters.all()),0)
+    self.assertEqual(len(u2.friends().all()),0)
+    self.assertFalse(u1.is_friends_with(u2))
+    self.assertEqual(len(u1.pending_friend_requests().all()),1)
+    self.assertEqual(u1.pending_friend_requests_count(),1)
+    self.assertTrue(u2.sent_friend_request_to(u1))
+    self.assertFalse(u2.can_send_friend_request_to(u1))
+    u1.decline_friend_request_from(u2)
+    self.assertEqual(len(u1.invitees.all()),0)
+    self.assertEqual(len(u1.inviters.all()),0)
+    self.assertEqual(len(u1.friends().all()),0)
+    self.assertEqual(len(u2.invitees.all()),0)
+    self.assertEqual(len(u2.inviters.all()),0)
+    self.assertEqual(len(u2.friends().all()),0)
+    self.assertFalse(u1.is_friends_with(u2))
+    self.assertEqual(len(u1.pending_friend_requests().all()),0)
+    self.assertEqual(u1.pending_friend_requests_count(),0)
+    self.assertFalse(u2.sent_friend_request_to(u1))
+    self.assertTrue(u2.can_send_friend_request_to(u1))
+
+"""
 class GameModelTestCase(FlaskTestCase):
   def test_tablename(self):
     self.assertEqual(Game.__tablename__,'games')
@@ -114,3 +257,4 @@ class DrawingModelTestCase(FlaskTestCase):
   def test_repr(self):
     drawing = Drawing(filename='filename')
     self.assertEqual(drawing.__repr__(), '<Drawing filename>')
+    """
