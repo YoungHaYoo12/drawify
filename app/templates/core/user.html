@@ -8,7 +8,7 @@
   <h1>{{user.username}}</h1>
   
   <!-- Friends Info -->
-  <a class="">Friends: <span class="badge badge-light">{{user.friends().count()}}</span></a>
+  <a href="{{url_for('core.friends',username=user.username)}}">Friends: <span class="badge badge-light">{{user.friends().count()}}</span></a>
   {% if current_user.is_authenticated and user!= current_user and
   user.is_friends_with(current_user) %}
   | <span class="label label-default">Friends With You</span>
