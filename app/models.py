@@ -160,7 +160,7 @@ class Drawing(db.Model):
   id = db.Column(db.Integer,primary_key=True)
   filename = db.Column(db.String(64),unique=True)
   user_id = db.Column(db.Integer, db.ForeignKey('users.id'))
-  questions = db.relationship('Question',backref='drawing',cascade="all, delete-orphan")
+  questions = db.relationship('Question',backref='drawing',cascade="all, delete-orphan",lazy='dynamic')
   timestamp = db.Column(db.DateTime, index=True, default=datetime.utcnow)
   display = db.Column(db.Boolean, default=False)
 
