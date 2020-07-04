@@ -5,6 +5,15 @@ from datetime import datetime
 from time import time
 import json
 
+class Friendship(db.Model):
+  __tablename__ = 'friendships'
+  inviter_id = db.Column(db.Integer, db.ForeignKey('users.id'),primary_key=True)
+  invitee_id = db.Column(db.Integer, db.ForeignKey('users.id'),primary_key=True)
+  status = db.Column(db.Enum('not_confirmed','confirmed'),nullable=False,server_default="not_confirmed")
+  timestamp = db.Column(db.DateTime, default=datetime.utcnow)
+  inviter_games_won = db.Column(db.Integer, default=0)
+  invitee_games_won = db.Column(db.Integer, default=0)
+
 class Follow(db.Model):
   __tablename__ = 'follows'
   follower_id = db.Column(db.Integer, db.ForeignKey('users.id'), primary_key=True)
@@ -26,6 +35,51 @@ class User(db.Model,UserMixin):
 
   created_games = db.relationship('Game',foreign_keys='Game.author_id',backref='author',lazy='dynamic',cascade="all, delete-orphan")
   invited_games = db.relationship('Game',foreign_keys='Game.guest_id',backref='guest',lazy='dynamic',cascade="all, delete-orphan")
+
+  # Friends Functionality
+  invitees = db.relationship('Friendship',
+                              foreign_keys=[Friendship.inviter_id],
+                              backref=db.backref('inviter',lazy='joined'),
+                              lazy='dynamic',
+                              cascade='all, delete-orphan')
+  inviters = db.relationship('Friendship',
+                              foreign_keys=[Friendship.invitee_id],
+                              backref=db.backref('invitee',lazy='joined'),
+                              lazy='dynamic',
+                              cascade='all, delete-orphan')
+
+  def friends(self):
+    return self.invitees.union(self.inviters).filter_by(status='confirmed')
+
+  def is_friends_with(self,user):
+    friendship = self.friends().filter((Friendship.inviter_id==user.id)|(Friendship.invitee_id==user.id)).first()
+    return friendship is not None
+
+  def sent_friend_request_to(self,user):
+    friend_request_sent = self.invitees.filter_by(status='not_confirmed').filter_by(invitee_id=user.id).first()
+    return friend_request_sent is not None
+  
+  def received_friend_request_from(self,user):
+    friend_request_received = self.inviters.filter_by(status='not_confirmed').filter_by(inviter_id=user.id).first()
+    return friend_request_received is not None
+  
+  def send_friend_request_to(self,user):
+    if not self.is_friends_with(user) and not self.sent_friend_request_to(user) and not self.received_friend_request_from(user):
+      f = Friendship(inviter=self,invitee=user)
+      db.session.add(f)
+      db.session.commit()
+
+  def accept_friend_request_from(self,user):
+    if self.received_friend_request_from(user):
+      f = self.inviters.filter_by(status='not_confirmed').filter_by(inviter_id=user.id).first()
+      f.status = 'confirmed'
+      db.session.commit()
+  
+  def remove_friend(self,user):
+    if self.is_friends_with(user):
+      friendship = self.friends().filter((Friendship.inviter_id==user.id)|(Friendship.invitee_id==user.id)).first()
+      db.session.delete(friendship)
+      db.session.commit()
 
   # Follower Functionality
   followed = db.relationship('Follow',
