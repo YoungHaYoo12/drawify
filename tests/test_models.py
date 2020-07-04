@@ -1,11 +1,40 @@
 from base_cases import FlaskTestCase
-from app.models import Drawing,Game,Hint,Question,User
+from app.models import Drawing,Friendship,Game,Hint,Question,User
 from app import db
 from datetime import datetime
 from sqlalchemy.exc import IntegrityError
 
+class FriendshipModelTestCase(FlaskTestCase):
+  def test_tablename(self):
+    self.assertEqual(Friendship.__tablename__,'friendships')
+  
+  def test_attributes(self):
+    user1 = User(username='one',email='one@one.com',password='one')
+    user2 = User(username='two',email='two@two.com',password='two')
+    before = datetime.utcnow()
+    f = Friendship(inviter=user1,invitee=user2)
+    db.session.add_all([user1,user2,f])
+    db.session.commit()
+    after = datetime.utcnow()
+
+    self.assertEqual(f.status,'not_confirmed')
+    self.assertEqual(f.inviter_id,1)
+    self.assertEqual(f.invitee_id,2)
+    self.assertTrue(f.timestamp > before and f.timestamp < after)
+    self.assertEqual(f.inviter_games_won,0)
+    self.assertEqual(f.invitee_games_won,0)
+
+  def test_get_friend(self):
+    user1 = User(username='one',email='one@one.com',password='one')
+    user2 = User(username='two',email='two@two.com',password='two')
+    f = Friendship(inviter=user1,invitee=user2)
+    db.session.add_all([user1,user2,f])
+    db.session.commit()
+
+    self.assertEqual(f.get_friend(user1),user2)
+    self.assertEqual(f.get_friend(user2),user1)
+
 class UserModelTestCase(FlaskTestCase):
-  """
   def test_password_setter(self):
     u = User(username='one',email='one@one.com',password='one')
     self.assertTrue(u.password_hash is not None)
@@ -62,7 +91,7 @@ class UserModelTestCase(FlaskTestCase):
     with self.assertRaises(IntegrityError):
       db.session.add(u2)
       db.session.commit()
-  """
+  
   def test_friendship_functionality(self):
     u1 = User(email='one@one.com', username='one', password='one')
     u2 = User(email='two@two.com',username='two',password='two')
@@ -145,7 +174,6 @@ class UserModelTestCase(FlaskTestCase):
     self.assertFalse(u2.sent_friend_request_to(u1))
     self.assertTrue(u2.can_send_friend_request_to(u1))
 
-"""
 class GameModelTestCase(FlaskTestCase):
   def test_tablename(self):
     self.assertEqual(Game.__tablename__,'games')
@@ -257,4 +285,3 @@ class DrawingModelTestCase(FlaskTestCase):
   def test_repr(self):
     drawing = Drawing(filename='filename')
     self.assertEqual(drawing.__repr__(), '<Drawing filename>')
-    """
