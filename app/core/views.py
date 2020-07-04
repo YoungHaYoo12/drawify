@@ -30,6 +30,62 @@ def notifications():
         'timestamp': n.timestamp
     } for n in notifications])
 
+@core.route('/send_friend_request/<username>')
+@login_required
+def send_friend_request(username):
+  # retrieve and validate user
+  user = User.query.filter_by(username=username).first()
+  if user is None:
+    flash('Invalid User')
+    return redirect(url_for('core.index'))
+
+  # Sent friend request to if appropriate
+  if current_user.is_friends_with(user):
+    flash('You Are Already Friends With This User')
+  elif current_user.sent_friend_request_to(user):
+    flash('You Have Already Sent a Friend Request to This User')
+  elif current_user.received_friend_request_from(user):
+    flash('You Have Already Received A Friend Request From This User')
+  else:
+    current_user.send_friend_request_to(user)
+    flash('Successfully Sent Friend Request to User')
+  return redirect(url_for('core.user',username=username))
+
+@core.route('/accept_friend_request/<username>')
+@login_required
+def accept_friend_request(username):
+  # retrieve and validate user
+  user = User.query.filter_by(username=username).first()
+  if user is None:
+    flash('Invalid User')
+    return redirect(url_for('core.index'))
+  
+  # accept friend request if appropriate
+  if current_user.received_friend_request_from(user):
+    current_user.accept_friend_request_from(user)
+    flash('Successfully Accepted Friend Request')
+  else:
+    flash('You Currently Do Not Have a Friend Request from This User')
+
+  return redirect(url_for('core.user',username=username))    
+
+@core.route('/remove_friend/<username>')
+@login_required
+def remove_friend(username):
+  # retrieve and validate user 
+  user = User.query.filter_by(username=username).first()
+  if user is None:
+    flash('Invalid User')
+    return redirect(url_for('core.index'))
+  
+  # remove friend if appropriate 
+  if current_user.is_friends_with(user):
+    current_user.remove_friend(user)
+  else:
+    flash('You Are Currently Not Friends with this User')
+  
+  return redirect(url_for('core.user',username=username))
+  
 @core.route('/follow/<username>')
 @login_required
 def follow(username):

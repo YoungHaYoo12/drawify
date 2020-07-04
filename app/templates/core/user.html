@@ -3,6 +3,37 @@
 {% block content %}
 <div class="core-user-wrapper text-center">
   <h1>Profile Page for {{user.username}}</h1>
+  <!-- Friends buttons -->
+  {% if current_user.is_authenticated and current_user != user%}
+    {% if current_user.can_send_friend_request_to(user) %}
+      <a class="follow-btn btn btn-primary" href="{{url_for('core.send_friend_request',username=user.username)}}"
+      >
+      Send Friend Request
+      </a>
+    {% elif current_user.received_friend_request_from(user) %}
+      <a class="follow-btn btn btn-primary" href="{{url_for('core.accept_friend_request',username=user.username)}}"
+      >
+      Accept Friend Request
+      </a>
+    {% elif current_user.is_friends_with(user) %}
+      <a class="follow-btn btn btn-danger" href="{{url_for('core.remove_friend',username=user.username)}}"
+      >
+      Remove Friend
+      </a>
+    {% else %}
+    {% endif %}
+  {% endif %}
+  <!-- Follow Info -->
+  <div class="col-12">
+    <div class="follow-info">
+      <a class="">Friends: <span class="badge badge-light">{{user.friends().count()}}</span></a>
+      {% if current_user.is_authenticated and user!= current_user and
+      user.is_friends_with(current_user) %}
+      | <span class="label label-default">Friends With You</span>
+      {% endif %}
+    </div>
+  </div>
+
   <!-- Follow and Unfollow buttons -->
   {% if current_user.is_authenticated and current_user != user%}
     {% if not current_user.is_following(user) %}
