@@ -59,7 +59,7 @@ class User(db.Model,UserMixin):
 
   def is_friends_with(self,user):
     friendship = self.friends().filter((Friendship.inviter_id==user.id)|(Friendship.invitee_id==user.id)).first()
-    return friendship is not None
+    return friendship is not None and self != user
 
   def sent_friend_request_to(self,user):
     friend_request_sent = self.invitees.filter_by(status='not_confirmed').filter_by(invitee_id=user.id).first()
