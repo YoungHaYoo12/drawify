@@ -63,8 +63,11 @@ class User(db.Model,UserMixin):
     friend_request_received = self.inviters.filter_by(status='not_confirmed').filter_by(inviter_id=user.id).first()
     return friend_request_received is not None
   
+  def can_send_friend_request_to(self,user):
+    return not self.is_friends_with(user) and not self.sent_friend_request_to(user) and not self.received_friend_request_from(user)
+
   def send_friend_request_to(self,user):
-    if not self.is_friends_with(user) and not self.sent_friend_request_to(user) and not self.received_friend_request_from(user):
+    if self.can_send_friend_request_to(user):
       f = Friendship(inviter=self,invitee=user)
       db.session.add(f)
       db.session.commit()
