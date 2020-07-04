@@ -44,6 +44,9 @@ def pending_games():
 @login_required
 def send_invite(opponent_username):
   opponent = User.query.filter_by(username=opponent_username).first_or_404()
+  if not current_user.is_friends_with(opponent):
+    flash('You cannot challenge users who are not your friends.')
+    return redirect(url_for('games.list'))
 
   # form processing 
   form = AddGameForm()
