@@ -82,6 +82,9 @@ class User(db.Model,UserMixin):
   def unanswered_games_count(self):
     return Game.query.filter(((Game.author == self) & (Game.turn == 'waiting_author_answer')) | ((Game.guest == self) & (Game.turn == 'waiting_guest_answer'))).count()
 
+  # returns all games (whether user is author or guest)
+  def all_games(self):
+    return self.created_games.union(self.invited_games)
 
   def add_notifications(self,name,data):
     self.notifications.filter_by(name=name).delete()

@@ -2,7 +2,7 @@ from app import db
 from app.games import games
 from app.games.forms import AddGameForm
 from app.models import User, Game, Question
-from flask import render_template, redirect, url_for,flash,abort
+from flask import render_template, redirect, url_for,flash,abort,request
 from flask_login import login_required, current_user
 
 @games.route('/game/<int:game_id>')
@@ -18,13 +18,21 @@ def game(game_id):
   return render_template('games/game.html',game=game,questions=questions)
 
 @games.route('/list')
+@games.route('/list/<game_status>')
 @login_required
-def list():
-  in_progress_games = current_user.created_games.filter(Game.status=='in_progress').all() + current_user.invited_games.filter(Game.status=='in_progress').all()
-  completed_games = current_user.created_games.filter((Game.status!='in_progress')&(Game.status!='not_confirmed')).all() + current_user.invited_games.filter((Game.status!='in_progress')&(Game.status!='not_confirmed')).all()
-  not_confirmed_games = current_user.created_games.filter(Game.status=='not_confirmed').all() + current_user.invited_games.filter(Game.status=='not_confirmed').all()
+def list(game_status=None):
+  # set up game status type (determines which type of game to display)
+  if game_status == None:
+    game_status = 'in_progress'
+  elif game_status != 'in_progress' and game_status != 'completed' and game_status != 'not_confirmed':
+    abort(404)
 
-  return render_template('games/list.html',in_progress_games=in_progress_games,completed_games=completed_games,not_confirmed_games=not_confirmed_games)
+  # retrieve games
+  in_progress_games = current_user.all_games().filter(Game.status=='in_progress').order_by(Game.timestamp.desc()).all()
+  completed_games = current_user.all_games().filter((Game.status!='in_progress')&(Game.status!='not_confirmed')).order_by(Game.timestamp.desc()).all()
+  not_confirmed_games = current_user.all_games().filter(Game.status=='not_confirmed').order_by(Game.timestamp.desc()).all()
+
+  return render_template('games/list.html',game_status=game_status,in_progress_games=in_progress_games,completed_games=completed_games,not_confirmed_games=not_confirmed_games)
 
 @games.route('/pending_games')
 @login_required
