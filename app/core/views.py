@@ -69,6 +69,24 @@ def accept_friend_request(username):
 
   return redirect(url_for('core.user',username=username))    
 
+@core.route('/decline_friend_request/<username>')
+@login_required
+def decline_friend_request(username):
+  # retrieve and validate user
+  user = User.query.filter_by(username=username).first()
+  if user is None:
+    flash('Invalid User')
+    return redirect(url_for('core.index'))
+  
+  # decline friend request if appropriate
+  if current_user.received_friend_request_from(user):
+    current_user.decline_friend_request_from(user)
+    flash('Declined Friend Request')
+  else:
+    flash('You Currently Do Not Have a Friend Request from This User')
+
+  return redirect(url_for('core.user',username=username))    
+
 @core.route('/remove_friend/<username>')
 @login_required
 def remove_friend(username):

@@ -72,6 +72,12 @@ class User(db.Model,UserMixin):
       f.status = 'confirmed'
       db.session.commit()
   
+  def decline_friend_request_from(self,user):
+    if self.received_friend_request_from(user):
+      f = self.inviters.filter_by(status='not_confirmed').filter_by(inviter_id=user.id).first()
+      db.session.delete(f)
+      db.session.commit()
+  
   def remove_friend(self,user):
     if self.is_friends_with(user):
       friendship = self.friends().filter((Friendship.inviter_id==user.id)|(Friendship.invitee_id==user.id)).first()

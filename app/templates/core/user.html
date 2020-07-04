@@ -35,7 +35,7 @@
           <a class="dropdown-item disabled" href="#">Respond to Friend Request</a>
           <div class="dropdown-divider"></div>
           <a class="dropdown-item" href="{{url_for('core.accept_friend_request',username=user.username)}}">Accept</a>
-          <a class="dropdown-item" href="{{url_for('core.accept_friend_request',username=user.username)}}">Reject</a>
+          <a class="dropdown-item" href="{{url_for('core.decline_friend_request',username=user.username)}}">Reject</a>
         </div>
       </div>
     {% elif current_user.is_friends_with(user) %}
