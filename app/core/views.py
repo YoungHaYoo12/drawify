@@ -113,3 +113,19 @@ def pending_friend_requests():
   pending_requests = [{'user': item.inviter, 'timestamp': item.timestamp} for item in pagination.items]
 
   return render_template('core/pending_friend_requests.html',pagination=pagination,pending_requests=pending_requests)
+
+@core.route('/friends/<username>')
+@login_required
+def friends(username):
+  # retrieve and validate user
+  user = User.query.filter_by(username=username).first()
+  if user is None:
+    flash('Invalid user')
+    return redirect(url_for('core.index'))
+  
+  # retrieve and paginate friendships
+  page = request.args.get('page',1,type=int)
+  pagination = user.friends().paginate(page=page,per_page=9)
+  friendships = [{'friend': item.get_friend(user)} for item in pagination.items]
+
+  return render_template('core/friends.html',friendships=friendships,pagination=pagination,user=user)

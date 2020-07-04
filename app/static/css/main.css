@@ -190,6 +190,12 @@ a:hover {
   margin-top:20px;
 }
 
+/* core/friends.html */
+.friends {
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+}
+
 /* games/game.html */
 .game-info-section {
   margin-bottom:35px;

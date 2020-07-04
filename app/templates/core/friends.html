@@ -1,0 +1,25 @@
+{% extends "base.html" %}
+{% import 'macros.html' as macros %}
+{% block content %}
+<div class="drawings-list-wrapper text-center">
+<h1>Friends of {{user.username}}</h1>
+  <div class="container">
+    <div class="friends">
+      {% for friendship in friendships %}
+        <div class="friend">
+          <div class="profile-image">
+          <img src="{{url_for('static',filename='images/profile1.png')}}">
+          </div>
+          <a href="{{url_for('core.user',username=friendship.friend.username)}}">
+            <h3>{{friendship.friend.username}}</h3>
+          </a>
+        </div>
+      {% endfor %}
+    </div>
+    <!-- Pagination -->
+    <div class="pagination-wrapper">
+    {{macros.pagination_widget(pagination,'core.friends',username=user.username)}}
+    </div>
+  </div>
+</div>
+{% endblock %}

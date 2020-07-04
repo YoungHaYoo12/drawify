@@ -14,6 +14,12 @@ class Friendship(db.Model):
   inviter_games_won = db.Column(db.Integer, default=0)
   invitee_games_won = db.Column(db.Integer, default=0)
 
+  def get_friend(self,user):
+    if self.inviter == user:
+      return self.invitee
+    else:
+      return self.inviter
+
 class User(db.Model,UserMixin):
   __tablename__ = 'users'
   id = db.Column(db.Integer,primary_key=True)
