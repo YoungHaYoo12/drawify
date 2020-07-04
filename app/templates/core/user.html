@@ -59,7 +59,15 @@
       </a>
     {% endif %}
   {% endif %}
-
+  
+  <!-- Game Challenge button -->
+  {% if current_user.is_friends_with(user) %}
+  |<a href="{{url_for('games.send_invite',opponent_username=user.username)}}">
+      <button class="btn btn-info">
+        Challenge
+      </button>
+    </a>
+  {% endif %}
 
   <!-- Selected Art Gallery -->
   <div class="art-gallery">
