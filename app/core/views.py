@@ -85,33 +85,3 @@ def remove_friend(username):
     flash('You Are Currently Not Friends with this User')
   
   return redirect(url_for('core.user',username=username))
-  
-@core.route('/follow/<username>')
-@login_required
-def follow(username):
-  user = User.query.filter_by(username=username).first()
-  if user is None:
-    flash('Invalid User')
-    return redirect(url_for('core.index'))
-  if current_user.is_following(user):
-    flash('You are already following this user.')
-    return redirect(url_for('core.user',username=username))
-  current_user.follow(user)
-  db.session.commit()
-  flash(f"You are now following {username}")
-  return redirect(url_for('core.user',username=username))
-
-@core.route('/unfollow/<username>')
-@login_required
-def unfollow(username):
-  user = User.query.filter_by(username=username).first()
-  if user is None:
-    flash('Invalid User')
-    return redirect(url_for('core.index'))
-  if not current_user.is_following(user):
-    flash('You are currently not following this user.')
-    return redirect(url_for('core.user',username=username))
-  current_user.unfollow(user)
-  db.session.commit()
-  flash(f"You are no longer following {username}")
-  return redirect(url_for('core.user',username=username))

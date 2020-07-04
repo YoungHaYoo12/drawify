@@ -34,32 +34,6 @@
     </div>
   </div>
 
-  <!-- Follow and Unfollow buttons -->
-  {% if current_user.is_authenticated and current_user != user%}
-    {% if not current_user.is_following(user) %}
-      <a class="follow-btn btn btn-primary" href="{{url_for('core.follow',username=user.username)}}"
-      >
-      Follow
-      </a>
-    {% else %}
-      <a class="follow-btn btn btn-primary" href="{{url_for('core.unfollow',username=user.username)}}"
-      >
-      Unfollow
-      </a>
-    {% endif %}
-  {% endif %}
-  <!-- Follow Info -->
-  <div class="col-12">
-    <div class="follow-info">
-      <a class="">Followers: <span class="badge badge-light">{{user.followers.count()}}</span></a>
-      <a class="">| Following: <span class="badge badge-light">{{user.followed.count()}}</span></a>
-      {% if current_user.is_authenticated and user!= current_user and
-      user.is_following(current_user) %}
-      | <span class="label label-default">Follows you</span>
-      {% endif %}
-    </div>
-  </div>
-
   <!-- Selected Art Gallery -->
   <div class="art-gallery">
     <div class="container">
