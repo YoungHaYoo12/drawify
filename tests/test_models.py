@@ -4,6 +4,189 @@ from app import db
 from datetime import datetime
 from sqlalchemy.exc import IntegrityError
 
+class ModelRelationshipsTestCase(FlaskTestCase):
+  def test_user_drawing(self):
+    u1 = User(username='one',email='one@one.com',password='one')
+    d1 = Drawing(filename='d1')
+    d2 = Drawing(filename='d2')
+
+    # before connecting
+    self.assertEqual(u1.drawings.count(),0)
+    self.assertFalse(d1 in u1.drawings.all())
+    self.assertFalse(d2 in u1.drawings.all())
+
+    d1.user = u1
+    d2.user = u1
+    self.assertEqual(u1.drawings.count(),2)
+    self.assertTrue(d1 in u1.drawings.all())
+    self.assertTrue(d2 in u1.drawings.all())
+
+  def test_drawing_question(self):
+    d1 = Drawing(filename='d1')
+    q1 = Question(answer='q1')
+    q2 = Question(answer='q2')
+
+    # before connecting
+    self.assertEqual(len(d1.questions.all()),0)
+    self.assertFalse(q1 in d1.questions.all())
+    self.assertFalse(q2 in d1.questions.all())
+
+    q1.drawing = d1
+    q2.drawing = d1
+    self.assertEqual(len(d1.questions.all()),2)
+    self.assertTrue(q1 in d1.questions.all())
+    self.assertTrue(q2 in d1.questions.all())
+
+  def test_user_question(self):
+    u1 = User(username='one',email='one@one.com',password='one')
+    u2 = User(username='two',email='two@two.com',password='two')
+
+    q1 = Question(answer='q1',author=u1,recipient=u2)
+    q2 = Question(answer='q2',author=u2,recipient=u1)
+
+    db.session.add_all([u1,u2,q1,q2])
+
+    self.assertTrue(q1 in u1.questions_sent.all())
+    self.assertFalse(q2 in u1.questions_sent.all())
+    self.assertTrue(q2 in u2.questions_sent.all())
+    self.assertFalse(q1 in u2.questions_sent.all())
+    self.assertFalse(q1 in u1.questions_received.all())
+    self.assertTrue(q2 in u1.questions_received.all())
+    self.assertFalse(q2 in u2.questions_received.all())
+    self.assertTrue(q1 in u2.questions_received.all())
+  
+  def test_question_game(self):
+    g1 = Game()
+    q1 = Question(answer='q1')
+    q2 = Question(answer='q2')
+
+    # before connecting
+    self.assertEqual(g1.questions.count(),0)
+
+    # after connecting
+    q1.game = g1
+    q2.game = g1
+    self.assertEqual(g1.questions.count(),2)
+    self.assertTrue(q1 in g1.questions.all())
+    self.assertTrue(q2 in g1.questions.all())
+
+  def test_hint_question(self):
+    q1 = Question(answer='q1')
+    h1 = Hint(body='h1')
+    h2 = Hint(body='h2')
+
+    # before connecting
+    self.assertEqual(q1.hints.count(),0)
+
+    # after connecting
+    h1.question = q1
+    h2.question = q1
+    self.assertEqual(q1.hints.count(),2)
+    self.assertTrue(h1 in q1.hints.all())
+    self.assertTrue(h2 in q1.hints.all())
+  
+  def test_user_game(self):
+    u1 = User(username='one',email='one@one.com',password='one')
+    u2 = User(username='two',email='two@two.com',password='two')
+    g1 = Game(author=u1,guest=u2)
+    g2 = Game(author=u2,guest=u1)
+    
+    self.assertEqual(u1.created_games.count(),1)
+    self.assertEqual(u1.invited_games.count(),1)
+    self.assertEqual(u2.created_games.count(),1)
+    self.assertEqual(u2.invited_games.count(),1)
+
+    self.assertTrue(g1 in u1.created_games.all())
+    self.assertTrue(g2 in u1.invited_games.all())
+    self.assertTrue(g1 in u2.invited_games.all())
+    self.assertTrue(g2 in u2.created_games.all())
+
+  def test_cascades(self):
+    # If User deleted, Drawing deleted
+    u1 = User(username='one',email='one@one.com',password='one')
+    d1 = Drawing(filename='d1')
+    d1.user = u1
+    db.session.add_all([u1,d1])
+    db.session.commit()
+    self.assertEqual(Drawing.query.count(),1)
+    db.session.delete(u1)
+    db.session.commit()
+    self.assertEqual(Drawing.query.count(),0)
+
+    # If User deleted, Question deleted
+    u1 = User(username='one',email='one@one.com',password='one')
+    u2 = User(username='two',email='two@two.com',password='two')
+    q1 = Question(answer='q1')
+    q2 = Question(answer='q2')
+    q1.author = u1
+    q1.recipient = u2
+    q2.author = u2
+    q2.recipient = u1
+    db.session.add_all([u1,u2,q1,q2])
+    db.session.commit()
+    self.assertEqual(Question.query.count(),2)
+    db.session.delete(u1)
+    db.session.delete(u2)
+    db.session.commit()
+    self.assertEqual(Question.query.count(),0)
+
+    # If User deleted, Game deleted
+    u1 = User(username='one',email='one@one.com',password='one')
+    g1 = Game(author=u1)
+    g2 = Game(guest=u1)
+    db.session.add_all([u1,g1,g2])
+    db.session.commit()
+    self.assertEqual(Game.query.count(),2)
+    db.session.delete(u1)
+    db.session.commit()
+    self.assertEqual(Game.query.count(),0)
+
+    # If User deleted, Friendship Deleted
+    u1 = User(username='one',email='one@one.com',password='one')
+    u2 = User(username='two',email='two@two.com',password='two')
+    f1 = Friendship(inviter=u1,invitee=u2)
+    f2 = Friendship(inviter=u2,invitee=u1)
+    db.session.add_all([u1,u2,f1,f2])
+    db.session.commit()
+    self.assertEqual(Friendship.query.count(),2)
+    db.session.delete(u1)
+    db.session.delete(u2)
+    db.session.commit()
+    self.assertEqual(Friendship.query.count(),0)
+
+    # If Drawing deleted, Question deleted
+    d1 = Drawing(filename='d1')
+    q1 = Question(answer='q1')
+    q1.drawing = d1
+    db.session.add_all([d1,q1])
+    db.session.commit()
+    self.assertEqual(Question.query.count(),1)
+    db.session.delete(d1)
+    db.session.commit()
+    self.assertEqual(Question.query.count(),0)
+
+    # If Question deleted, Hint deleted
+    q1 = Question(answer='q1')
+    h1 = Hint(body='h1')
+    h1.question = q1
+    db.session.add_all([h1,q1])
+    db.session.commit()
+    self.assertEqual(Hint.query.count(),1)
+    db.session.delete(q1)
+    db.session.commit()
+    self.assertEqual(Hint.query.count(),0)
+
+    # If Game deleted, Question deleted
+    g1 = Game()
+    q1 = Question(answer='q1')
+    q1.game = g1
+    db.session.add_all([g1,q1])
+    db.session.commit()
+    self.assertEqual(Question.query.count(),1)
+    db.session.delete(g1)
+    db.session.commit()
+    self.assertEqual(Question.query.count(),0)
+
 class FriendshipModelTestCase(FlaskTestCase):
   def test_tablename(self):
     self.assertEqual(Friendship.__tablename__,'friendships')
