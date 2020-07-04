@@ -1,2 +1,11 @@
 Background.jpg
 Photo by Jess Bailey in Unsplash
+
+profile1.png
+https://pixabay.com/vectors/silhouette-artist-isolated-sketch-3131943/
+
+profile2.png
+https://pixabay.com/vectors/violinist-orchestra-silhouette-art-4990418/
+
+profile3.png
+https://pixabay.com/vectors/silhouette-saxophonist-man-jazz-3379704/
