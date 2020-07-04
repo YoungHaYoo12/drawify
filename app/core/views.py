@@ -2,7 +2,7 @@ from flask import render_template, request,jsonify,flash, redirect,url_for
 from flask_login import login_required, current_user
 from app import db
 from app.core import core
-from app.models import Notification,User,Drawing
+from app.models import Notification,User,Drawing,Friendship
 
 @core.route('/')
 def index():
@@ -103,3 +103,13 @@ def remove_friend(username):
     flash('You Are Currently Not Friends with this User')
   
   return redirect(url_for('core.user',username=username))
+
+@core.route('/pending_friend_requests')
+@login_required
+def pending_friend_requests():
+  # retrieve pending requests
+  page = request.args.get('page',1,type=int)
+  pagination = current_user.pending_friend_requests().order_by(Friendship.timestamp.desc()).paginate(page=page,per_page=10)
+  pending_requests = [{'user': item.inviter, 'timestamp': item.timestamp} for item in pagination.items]
+
+  return render_template('core/pending_friend_requests.html',pagination=pagination,pending_requests=pending_requests)

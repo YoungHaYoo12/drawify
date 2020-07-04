@@ -45,6 +45,12 @@ class User(db.Model,UserMixin):
   def friends(self):
     return self.invitees.union(self.inviters).filter_by(status='confirmed')
 
+  def pending_friend_requests(self):
+    return self.inviters.filter_by(status='not_confirmed')
+
+  def pending_friend_requests_count(self):
+    return self.inviters.filter_by(status='not_confirmed').count()
+
   def is_friends_with(self,user):
     friendship = self.friends().filter((Friendship.inviter_id==user.id)|(Friendship.invitee_id==user.id)).first()
     return friendship is not None

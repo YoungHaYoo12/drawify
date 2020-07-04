@@ -36,7 +36,7 @@
         <li class="nav-item dropdown">
           <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
             Inbox
-              {% set total = current_user.new_questions() + current_user.unconfirmed_games_count() %}
+              {% set total = current_user.new_questions() + current_user.unconfirmed_games_count() + current_user.pending_friend_requests_count() %}
               <span id="question_count" class="badge badge-info"
               style="visibility: {% if total %}visible{% else %}hidden {% endif %};">
                 {{ total }}
@@ -57,6 +57,14 @@
               <span id="question_count" class="badge badge-info"
               style="visibility: {% if pending_games %}visible{% else %}hidden {% endif %};">
                 {{ pending_games }}
+              </span>
+            </a>
+            <a class="dropdown-item" href="{{url_for('core.pending_friend_requests')}}">
+              Pending Friend Requests
+              {% set pending_friend_requests = current_user.pending_friend_requests_count() %}
+              <span id="question_count" class="badge badge-info"
+              style="visibility: {% if pending_friend_requests %}visible{% else %}hidden {% endif %};">
+                {{ pending_friend_requests }}
               </span>
             </a>
           </div>

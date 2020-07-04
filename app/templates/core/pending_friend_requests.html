@@ -1,0 +1,34 @@
+{% extends "base.html" %}
+{% import 'macros.html' as macros %}
+{% block content %}
+<div class="container">
+  <h1 class="text-center">Pending Friend Requests</h1>
+    {% if pending_requests|length == 0 %}
+    <p class="text-center text-muted">
+      You have no new friend requests in your inbox.
+    </p>
+    {% endif %}
+    {% for request in pending_requests %}
+      <li class="list-group-item list-group-item-info">
+        <h3>
+        {{request.user.username}} on {{request.timestamp}}
+        </h3>
+          <a href="{{url_for('core.accept_friend_request',username=request.user.username)}}">
+            <button class="btn btn-primary">
+            Accept
+            </button>
+          </a>
+          <a href="{{url_for('core.decline_friend_request',username=request.user.username)}}">
+            <button class="btn btn-danger">
+            Reject
+            </button>
+          </a>
+      </li>
+    {% endfor %}
+
+    <!-- Pagination -->
+    <div class="pagination-wrapper">
+    {{macros.pagination_widget(pagination,'core.pending_friend_requests')}}
+    </div>
+</div>
+{% endblock %}
