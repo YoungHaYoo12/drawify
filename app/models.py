@@ -229,26 +229,26 @@ class Game(db.Model):
   turn = db.Column(db.Enum('author','guest','waiting_author_answer','waiting_guest_answer'),nullable=False,server_default="author")
 
   def is_turn(self,user):
-    if user == self.author and self.turn == 'author':
+    if user is self.author and self.turn == 'author':
       return True
     
-    if user == self.guest and self.turn == 'guest':
+    if user is self.guest and self.turn == 'guest':
       return True
     
     return False
   
   # returns True if game is waiting for answer from user 
   def is_waiting_answer_from(self,user):
-    if user == self.author and self.turn == 'waiting_author_answer':
+    if user is self.author and self.turn == 'waiting_author_answer':
       return True
-    if user == self.guest and self.turn == 'waiting_guest_answer':
+    if user is self.guest and self.turn == 'waiting_guest_answer':
       return True
     
     return False
 
   # returns True if user is the author of game
   def is_author(self,user):
-    return self.author == user
+    return self.author is user
   
   # return True if author won game
   def is_author_win(self):
@@ -288,7 +288,7 @@ class Game(db.Model):
 
   # validate that user1 and user2 are both players of the game
   def validate_players(self,user1,user2):
-    return (user1 == self.author and user2 == self.guest) or (user1 == self.guest and user2 == self.author)
+    return (user1 is self.author and user2 is self.guest) or (user1 is self.guest and user2 is self.author)
   
   # returns the user's opponent
   def get_opponent(self,user):
