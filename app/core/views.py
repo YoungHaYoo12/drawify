@@ -38,6 +38,9 @@ def send_friend_request(username):
   if user is None:
     flash('Invalid User')
     return redirect(url_for('core.index'))
+  if user == current_user:
+    flash('You cannot friend yourself.')
+    return redirect(url_for('core.index'))
 
   # Sent friend request to if appropriate
   if current_user.is_friends_with(user):
