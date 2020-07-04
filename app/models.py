@@ -14,12 +14,6 @@ class Friendship(db.Model):
   inviter_games_won = db.Column(db.Integer, default=0)
   invitee_games_won = db.Column(db.Integer, default=0)
 
-class Follow(db.Model):
-  __tablename__ = 'follows'
-  follower_id = db.Column(db.Integer, db.ForeignKey('users.id'), primary_key=True)
-  followed_id = db.Column(db.Integer, db.ForeignKey('users.id'),primary_key=True)
-  timestamp = db.Column(db.DateTime, default=datetime.utcnow)
-
 class User(db.Model,UserMixin):
   __tablename__ = 'users'
   id = db.Column(db.Integer,primary_key=True)
@@ -82,36 +76,6 @@ class User(db.Model,UserMixin):
     if self.is_friends_with(user):
       friendship = self.friends().filter((Friendship.inviter_id==user.id)|(Friendship.invitee_id==user.id)).first()
       db.session.delete(friendship)
-      db.session.commit()
-
-  # Follower Functionality
-  followed = db.relationship('Follow',
-                            foreign_keys=[Follow.follower_id],
-                            backref=db.backref('follower',lazy='joined'),
-                            lazy='dynamic',
-                            cascade='all, delete-orphan')
-  followers = db.relationship('Follow',
-                            foreign_keys=[Follow.followed_id],
-                            backref=db.backref('followed',lazy='joined'),
-                            lazy='dynamic',
-                            cascade='all, delete-orphan')
-
-  def is_following(self,user):
-    return self.followed.filter_by(followed_id=user.id).first() is not None
-  
-  def is_followed_by(self,user):
-    return self.followers.filter_by(follower_id=user.id).first() is not None
-  
-  def follow(self,user):
-    if not self.is_following(user):
-      f = Follow(follower=self,followed=user)
-      db.session.add(f)
-      db.session.commit()
-  
-  def unfollow(self,user):
-    f = self.followed.filter_by(followed_id=user.id).first()
-    if f:
-      db.session.delete(f)
       db.session.commit()
 
   def new_questions(self):

@@ -1,8 +1,8 @@
 """First Migration.
 
-Revision ID: 00424e7531a0
+Revision ID: a99d7e52c3f7
 Revises: 
-Create Date: 2020-07-02 09:55:47.327803
+Create Date: 2020-07-04 01:49:56.517916
 
 """
 from alembic import op
@@ -10,7 +10,7 @@ import sqlalchemy as sa
 
 
 # revision identifiers, used by Alembic.
-revision = '00424e7531a0'
+revision = 'a99d7e52c3f7'
 down_revision = None
 branch_labels = None
 depends_on = None
@@ -32,17 +32,23 @@ def upgrade():
     sa.Column('id', sa.Integer(), nullable=False),
     sa.Column('filename', sa.String(length=64), nullable=True),
     sa.Column('user_id', sa.Integer(), nullable=True),
+    sa.Column('timestamp', sa.DateTime(), nullable=True),
+    sa.Column('display', sa.Boolean(), nullable=True),
     sa.ForeignKeyConstraint(['user_id'], ['users.id'], ),
     sa.PrimaryKeyConstraint('id'),
     sa.UniqueConstraint('filename')
     )
-    op.create_table('follows',
-    sa.Column('follower_id', sa.Integer(), nullable=False),
-    sa.Column('followed_id', sa.Integer(), nullable=False),
+    op.create_index(op.f('ix_drawings_timestamp'), 'drawings', ['timestamp'], unique=False)
+    op.create_table('friendships',
+    sa.Column('inviter_id', sa.Integer(), nullable=False),
+    sa.Column('invitee_id', sa.Integer(), nullable=False),
+    sa.Column('status', sa.Enum('not_confirmed', 'confirmed'), server_default='not_confirmed', nullable=False),
     sa.Column('timestamp', sa.DateTime(), nullable=True),
-    sa.ForeignKeyConstraint(['followed_id'], ['users.id'], ),
-    sa.ForeignKeyConstraint(['follower_id'], ['users.id'], ),
-    sa.PrimaryKeyConstraint('follower_id', 'followed_id')
+    sa.Column('inviter_games_won', sa.Integer(), nullable=True),
+    sa.Column('invitee_games_won', sa.Integer(), nullable=True),
+    sa.ForeignKeyConstraint(['invitee_id'], ['users.id'], ),
+    sa.ForeignKeyConstraint(['inviter_id'], ['users.id'], ),
+    sa.PrimaryKeyConstraint('inviter_id', 'invitee_id')
     )
     op.create_table('games',
     sa.Column('id', sa.Integer(), nullable=False),
@@ -51,12 +57,14 @@ def upgrade():
     sa.Column('current_author_points', sa.Integer(), nullable=True),
     sa.Column('current_guest_points', sa.Integer(), nullable=True),
     sa.Column('max_points', sa.Integer(), nullable=True),
+    sa.Column('timestamp', sa.DateTime(), nullable=True),
     sa.Column('status', sa.Enum('not_confirmed', 'rejected', 'in_progress', 'author', 'guest'), server_default='not_confirmed', nullable=False),
     sa.Column('turn', sa.Enum('author', 'guest', 'waiting_author_answer', 'waiting_guest_answer'), server_default='author', nullable=False),
     sa.ForeignKeyConstraint(['author_id'], ['users.id'], ),
     sa.ForeignKeyConstraint(['guest_id'], ['users.id'], ),
     sa.PrimaryKeyConstraint('id')
     )
+    op.create_index(op.f('ix_games_timestamp'), 'games', ['timestamp'], unique=False)
     op.create_table('notifications',
     sa.Column('id', sa.Integer(), nullable=False),
     sa.Column('name', sa.String(length=128), nullable=True),
@@ -104,8 +112,10 @@ def downgrade():
     op.drop_index(op.f('ix_notifications_timestamp'), table_name='notifications')
     op.drop_index(op.f('ix_notifications_name'), table_name='notifications')
     op.drop_table('notifications')
+    op.drop_index(op.f('ix_games_timestamp'), table_name='games')
     op.drop_table('games')
-    op.drop_table('follows')
+    op.drop_table('friendships')
+    op.drop_index(op.f('ix_drawings_timestamp'), table_name='drawings')
     op.drop_table('drawings')
     op.drop_index(op.f('ix_users_username'), table_name='users')
     op.drop_index(op.f('ix_users_email'), table_name='users')
