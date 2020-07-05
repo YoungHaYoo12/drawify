@@ -312,22 +312,23 @@ class UserModelTestCase(FlaskTestCase):
     self.assertEqual(u1.unconfirmed_games_count(),1)
     self.assertTrue(game1 in u1.unconfirmed_games())
 
-    # unanswered_games() and unanswered_games_count()
-    self.assertEqual(u1.unanswered_games_count(),0)
-    game2 = Game(author=u2,guest=u1,turn='waiting_guest_answer',max_points=7)
-    game3 = Game(author=u1,guest=u2,turn='waiting_author_answer',max_points=7)
-    game4 = Game(author=u2,guest=u1,turn='waiting_author_answer',max_points=7)
-    game5 = Game(author=u1,guest=u2,turn='waiting_guest_answer',max_points=7)
+    game2 = Game(author=u2,guest=u1,status='waiting_guest_answer',max_points=7)
+    game3 = Game(author=u1,guest=u2,status='waiting_author_answer',max_points=7)
+    game4 = Game(author=u2,guest=u1,status='waiting_author_answer',max_points=7)
+    game5 = Game(author=u1,guest=u2,status='waiting_guest_answer',max_points=7)
     db.session.add_all([game2,game3,game4,game5])
     db.session.commit()
-    self.assertEqual(u1.unanswered_games_count(),2)
-    self.assertTrue(game2 in u1.unanswered_games())
-    self.assertTrue(game3 in u1.unanswered_games())
-    self.assertFalse(game4 in u1.unanswered_games())
-    self.assertFalse(game5 in u1.unanswered_games())
 
-    # test all games 
+    # test all games  
     self.assertEqual(u1.all_games().count(),5)
+
+    # test in_progress_games() and completed_games()
+    self.assertEqual(u1.completed_games().count(),0)
+    self.assertEqual(u1.in_progress_games().count(),4)
+    game3.status = 'author_win'
+    db.session.commit()
+    self.assertEqual(u1.in_progress_games().count(),3)
+    self.assertEqual(u1.completed_games().count(),1)
 
   def test_friendship_functionality(self):
     u1 = User(email='one@one.com', username='one', password='one')
@@ -432,7 +433,7 @@ class GameModelTestCase(FlaskTestCase):
     self.assertEqual(game.max_points,8)
     self.assertTrue(before < game.timestamp and game.timestamp < after)
     self.assertEqual(game.status,'not_confirmed')
-    self.assertEqual(game.turn,'author')
+    self.assertEqual(game.status,'author')
 
   def test_methods(self):
     u1 = User(username='one',email='one@one.com',password='one')
@@ -557,3 +558,4 @@ class DrawingModelTestCase(FlaskTestCase):
   def test_repr(self):
     drawing = Drawing(filename='filename')
     self.assertEqual(drawing.__repr__(), '<Drawing filename>')
+    
