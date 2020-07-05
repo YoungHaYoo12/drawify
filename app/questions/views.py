@@ -43,11 +43,6 @@ def send_question(recipient,drawing_id,game_id):
     flash('It is currently not your turn.')
     return redirect(url_for('games.game',game_id=game.id))
   
-  # check if game is in progress
-  if not game.is_in_progress():
-    flash('Game is currently not in progress.')
-    return redirect(url_for('games.game',game_id=game.id))
-
   form = QuestionForm()
 
   if form.validate_on_submit():
