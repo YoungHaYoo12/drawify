@@ -56,10 +56,7 @@ def send_question(recipient,drawing_id,game_id):
     db.session.commit()
 
     # update game
-    if game.is_author(current_user):
-      game.status = 'waiting_guest_answer'
-    else:
-      game.status = 'waiting_author_answer'
+    game.turn_update()
 
     # add new Question instance
     question = Question(author=current_user, recipient=user,answer=form.answer.data,drawing=drawing)
@@ -126,18 +123,11 @@ def question(id):
     if question.check_answer(form.answer.data):
       flash('Question Answered Correctly')
       question.status = 'complete'
+
       # update game
-      game.make_user_turn(current_user)
+      game.turn_update()
       game.update_user_score(current_user,1)
-
-      # check if game has been won
-      if game.is_author_win():
-        game.status = 'author_win'
-        flash('Author Has Won!')
-      if game.is_guest_win():
-        game.status = 'guest_win'
-        flash('Guest Has Won!')
-
+      game.win_update()
       db.session.commit()
 
       return redirect(url_for('games.game',game_id=question.game.id))
@@ -147,7 +137,7 @@ def question(id):
       flash('Incorrect. You Have Run Out of Tries On This Question')
       question.status = 'lost'
       # update game
-      game.make_user_turn(current_user)
+      game.turn_update()
 
       db.session.commit()
 

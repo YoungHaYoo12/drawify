@@ -271,6 +271,24 @@ class Game(db.Model):
   def is_guest_win(self):
     return self.current_guest_points >= self.max_points
   
+  # update game status based on win condition
+  def win_update(self):
+    if self.current_author_points >= self.max_points:
+      self.status = 'author_win'
+    elif self.current_guest_points >= self.max_points:
+      self.status = 'guest_win'
+  
+  # update game status based on whose turn it is 
+  def turn_update(self):
+    if self.status == 'author_turn_to_ask':
+      self.status = 'waiting_guest_answer'
+    elif self.status == 'waiting_guest_answer':
+      self.status = 'guest_turn_to_ask'
+    elif self.status == 'guest_turn_to_ask':
+      self.status = 'waiting_author_answer'
+    else:
+      self.status = 'author_turn_to_ask'
+
   # returns True if user has won game
   def is_user_win(self,user):
     if self.is_author(user):
