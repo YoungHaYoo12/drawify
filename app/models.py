@@ -4,6 +4,7 @@ from werkzeug.security import generate_password_hash, check_password_hash
 from datetime import datetime
 from time import time
 import json
+import random
 
 class Friendship(db.Model):
   __tablename__ = 'friendships'
@@ -311,6 +312,14 @@ class Game(db.Model):
   
   def is_in_progress(self):
     return self.status == 'author_turn_to_ask' or self.status == 'guest_turn_to_ask' or self.status == 'waiting_author_answer' or self.status == 'waiting_guest_answer'
+
+  # accept game 
+  def accept_game(self):
+    r = random.randint(1, 2)
+    if r == 1:
+      self.status = 'author_turn_to_ask'
+    else:
+      self.status = 'guest_turn_to_ask'
 
   def __repr__(self):
     return f"<Game {self.id}>"

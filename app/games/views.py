@@ -79,7 +79,7 @@ def accept_invite(game_id):
     return redirect(url_for('games.game',game_id=game.id))
   
   # accept game
-  game.status = 'author_turn_to_ask'
+  game.accept_game()
   db.session.commit()
 
   return redirect(url_for('games.game',game_id=game.id))
