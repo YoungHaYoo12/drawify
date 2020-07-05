@@ -28,16 +28,16 @@ def list(game_status=None):
     abort(404)
 
   # retrieve games
-  in_progress_games = current_user.all_games().filter(Game.status=='in_progress').order_by(Game.timestamp.desc()).all()
-  completed_games = current_user.all_games().filter((Game.status!='in_progress')&(Game.status!='not_confirmed')).order_by(Game.timestamp.desc()).all()
-  not_confirmed_games = current_user.all_games().filter(Game.status=='not_confirmed').order_by(Game.timestamp.desc()).all()
+  in_progress_games = current_user.in_progress_games().order_by(Game.timestamp.desc()).all()
+  completed_games = current_user.completed_games().order_by(Game.timestamp.desc()).all()
+  not_confirmed_games = current_user.unconfirmed_games().order_by(Game.timestamp.desc()).all()
 
   return render_template('games/list.html',game_status=game_status,in_progress_games=in_progress_games,completed_games=completed_games,not_confirmed_games=not_confirmed_games)
 
 @games.route('/pending_games')
 @login_required
 def pending_games():
-  unconfirmed_games = current_user.unconfirmed_games()
+  unconfirmed_games = current_user.unconfirmed_games().all()
   return render_template('games/pending_games.html',unconfirmed_games=unconfirmed_games)
 
 @games.route('/send_invite/<opponent_username>',methods=['GET','POST'])
@@ -79,7 +79,7 @@ def accept_invite(game_id):
     return redirect(url_for('games.game',game_id=game.id))
   
   # accept game
-  game.status = 'in_progress'
+  game.status = 'author_turn_to_ask'
   db.session.commit()
 
   return redirect(url_for('games.game',game_id=game.id))

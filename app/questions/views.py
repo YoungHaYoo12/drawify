@@ -44,7 +44,7 @@ def send_question(recipient,drawing_id,game_id):
     return redirect(url_for('games.game',game_id=game.id))
   
   # check if game is in progress
-  if not game.status == 'in_progress':
+  if not game.is_in_progress():
     flash('Game is currently not in progress.')
     return redirect(url_for('games.game',game_id=game.id))
 
@@ -57,9 +57,9 @@ def send_question(recipient,drawing_id,game_id):
 
     # update game
     if game.is_author(current_user):
-      game.turn = 'waiting_guest_answer'
+      game.status = 'waiting_guest_answer'
     else:
-      game.turn = 'waiting_author_answer'
+      game.status = 'waiting_author_answer'
 
     # add new Question instance
     question = Question(author=current_user, recipient=user,answer=form.answer.data,drawing=drawing)
@@ -132,10 +132,10 @@ def question(id):
 
       # check if game has been won
       if game.is_author_win():
-        game.status = 'author'
+        game.status = 'author_win'
         flash('Author Has Won!')
       if game.is_guest_win():
-        game.status = 'guest'
+        game.status = 'guest_win'
         flash('Guest Has Won!')
 
       db.session.commit()

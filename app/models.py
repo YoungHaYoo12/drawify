@@ -107,11 +107,11 @@ class User(db.Model,UserMixin):
   
   # returns games awaiting user confirmation 
   def unconfirmed_games(self):
-    return Game.query.filter_by(guest=self).filter(Game.status == 'not_confirmed').all()
+    return Game.query.filter_by(guest=self).filter(Game.status == 'not_confirmed')
 
   # returns games awaiting user answer
   def unanswered_games(self):
-    return Game.query.filter(((Game.author == self) & (Game.turn == 'waiting_author_answer')) | ((Game.guest == self) & (Game.turn == 'waiting_guest_answer'))).all()
+    return Game.query.filter(((Game.author == self) & (Game.turn == 'waiting_author_answer')) | ((Game.guest == self) & (Game.turn == 'waiting_guest_answer')))
 
   # returns games awaiting user confirmation 
   def unconfirmed_games_count(self):
@@ -124,6 +124,12 @@ class User(db.Model,UserMixin):
   # returns all games (whether user is author or guest)
   def all_games(self):
     return self.created_games.union(self.invited_games)
+
+  def in_progress_games(self):
+    return self.all_games().filter((Game.status=='author_turn_to_ask')|(Game.status=='guest_turn_to_ask')|(Game.status=='waiting_author_answer')|(Game.status=='waiting_guest_answer'))
+  
+  def completed_games(self):
+    return self.all_games().filter((Game.status=='rejected')|(Game.status=='author_win')|(Game.status=='guest_win'))
 
   def add_notifications(self,name,data):
     self.notifications.filter_by(name=name).delete()
@@ -223,32 +229,38 @@ class Game(db.Model):
   max_points = db.Column(db.Integer)
   questions = db.relationship('Question',backref='game',lazy='dynamic',cascade="all, delete-orphan")
   timestamp = db.Column(db.DateTime, index=True, default=datetime.utcnow)
-
-  # user is winner if status == 'user' and vice versa
-  status = db.Column(db.Enum('not_confirmed','rejected','in_progress','author','guest'),nullable=False,server_default="not_confirmed")
-  turn = db.Column(db.Enum('author','guest','waiting_author_answer','waiting_guest_answer'),nullable=False,server_default="author")
+  status = db.Column(db.Enum(
+    'not_confirmed',
+    'rejected',
+    'author_win',
+    'guest_win',
+    'author_turn_to_ask',
+    'guest_turn_to_ask',
+    'waiting_author_answer',
+    'waiting_guest_answer'
+  ),nullable=False,server_default="not_confirmed")
 
   def is_turn(self,user):
-    if user is self.author and self.turn == 'author':
+    if user == self.author and self.status == 'author_turn_to_ask':
       return True
     
-    if user is self.guest and self.turn == 'guest':
+    if user == self.guest and self.status == 'guest_turn_to_ask':
       return True
     
     return False
   
   # returns True if game is waiting for answer from user 
   def is_waiting_answer_from(self,user):
-    if user is self.author and self.turn == 'waiting_author_answer':
+    if user == self.author and self.status == 'waiting_author_answer':
       return True
-    if user is self.guest and self.turn == 'waiting_guest_answer':
+    if user == self.guest and self.status == 'waiting_guest_answer':
       return True
     
     return False
 
   # returns True if user is the author of game
   def is_author(self,user):
-    return self.author is user
+    return self.author == user
   
   # return True if author won game
   def is_author_win(self):
@@ -261,16 +273,16 @@ class Game(db.Model):
   # returns True if user has won game
   def is_user_win(self,user):
     if self.is_author(user):
-      return self.status == 'author'
+      return self.status == 'author_win'
     else:
-      return self.status == 'guest'
+      return self.status == 'guest_win'
 
   # returns True if user has won game
   def is_user_loss(self,user):
     if self.is_author(user):
-      return self.status == 'guest'
+      return self.status == 'guest_win'
     else:
-      return self.status == 'author'
+      return self.status == 'author_win'
 
   # update the score of the user 
   def update_user_score(self,user,increment):
@@ -282,13 +294,13 @@ class Game(db.Model):
   # make it the user's turn
   def make_user_turn(self,user):
     if self.is_author(user):
-      self.turn = 'author'
+      self.status = 'author_turn_to_ask'
     else:
-      self.turn = 'guest'
+      self.status = 'guest_turn_to_ask'
 
   # validate that user1 and user2 are both players of the game
   def validate_players(self,user1,user2):
-    return (user1 is self.author and user2 is self.guest) or (user1 is self.guest and user2 is self.author)
+    return (user1 == self.author and user2 == self.guest) or (user1 == self.guest and user2 == self.author)
   
   # returns the user's opponent
   def get_opponent(self,user):
@@ -296,6 +308,9 @@ class Game(db.Model):
       return self.guest
     else:
       return self.author
+  
+  def is_in_progress(self):
+    return self.status == 'author_turn_to_ask' or self.status == 'guest_turn_to_ask' or self.status == 'waiting_author_answer' or self.status == 'waiting_guest_answer'
 
   def __repr__(self):
     return f"<Game {self.id}>"

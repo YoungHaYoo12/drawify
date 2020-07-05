@@ -1,8 +1,8 @@
-"""First Migration.
+"""First Migration
 
-Revision ID: a99d7e52c3f7
+Revision ID: 8db14dbbff4a
 Revises: 
-Create Date: 2020-07-04 01:49:56.517916
+Create Date: 2020-07-05 04:50:18.089505
 
 """
 from alembic import op
@@ -10,7 +10,7 @@ import sqlalchemy as sa
 
 
 # revision identifiers, used by Alembic.
-revision = 'a99d7e52c3f7'
+revision = '8db14dbbff4a'
 down_revision = None
 branch_labels = None
 depends_on = None
@@ -58,8 +58,7 @@ def upgrade():
     sa.Column('current_guest_points', sa.Integer(), nullable=True),
     sa.Column('max_points', sa.Integer(), nullable=True),
     sa.Column('timestamp', sa.DateTime(), nullable=True),
-    sa.Column('status', sa.Enum('not_confirmed', 'rejected', 'in_progress', 'author', 'guest'), server_default='not_confirmed', nullable=False),
-    sa.Column('turn', sa.Enum('author', 'guest', 'waiting_author_answer', 'waiting_guest_answer'), server_default='author', nullable=False),
+    sa.Column('status', sa.Enum('not_confirmed', 'rejected', 'author_win', 'guest_win', 'author_turn_to_ask', 'guest_turn_to_ask', 'waiting_author_answer', 'waiting_guest_answer'), server_default='not_confirmed', nullable=False),
     sa.ForeignKeyConstraint(['author_id'], ['users.id'], ),
     sa.ForeignKeyConstraint(['guest_id'], ['users.id'], ),
     sa.PrimaryKeyConstraint('id')
