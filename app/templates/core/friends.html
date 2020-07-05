@@ -8,7 +8,7 @@
       {% for friendship in friendships %}
         <div class="friend">
           <div class="profile-image">
-          <img src="{{url_for('static',filename='images/profile1.png')}}">
+          <img src="{{url_for('static',filename='images/'+user.profile_pic_link)}}">
           </div>
           <a href="{{url_for('core.user',username=friendship.friend.username)}}">
             <h3>{{friendship.friend.username}}</h3>

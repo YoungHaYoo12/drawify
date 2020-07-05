@@ -27,6 +27,7 @@ class User(db.Model,UserMixin):
   username = db.Column(db.String(64),unique=True,index=True)
   email = db.Column(db.String(64),unique=True,index=True)
   password_hash = db.Column(db.String(128))
+  profile_pic = db.Column(db.Integer)
   drawings = db.relationship('Drawing',backref='user',lazy='dynamic',cascade="all, delete-orphan")
   notifications = db.relationship('Notification',backref='user',lazy='dynamic')
 
@@ -131,6 +132,9 @@ class User(db.Model,UserMixin):
     db.session.commit()
     return n
 
+  @property 
+  def profile_pic_link(self):
+    return 'profile' + str(self.profile_pic) + '.png'
   @property
   def password(self):
     raise AttributeError('password is not a readable attribute')
@@ -146,7 +150,10 @@ class User(db.Model,UserMixin):
     self.username = username
     self.email = email
     self.password = password 
-  
+
+    #random choice of profile picture
+    self.profile_pic = random.randint(1,3)
+
   def __repr__(self):
     return f"<User {self.username}>"
 

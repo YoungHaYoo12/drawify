@@ -3,7 +3,7 @@
 {% block content %}
 <div class="core-user-wrapper text-center">
   <div class="profile-image">
-    <img src="{{url_for('static',filename='images/profile1.png')}}">
+    <img src="{{url_for('static',filename='images/'+user.profile_pic_link)}}">
   </div>
   <h1>{{user.username}}</h1>
   
