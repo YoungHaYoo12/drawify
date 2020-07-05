@@ -261,16 +261,16 @@ class Game(db.Model):
   # returns True if user has won game
   def is_user_win(self,user):
     if self.is_author(user):
-      return self.is_author_win()
+      return self.status == 'author'
     else:
-      return self.is_guest_win()
+      return self.status == 'guest'
 
   # returns True if user has won game
   def is_user_loss(self,user):
     if self.is_author(user):
-      return self.is_guest_win()
+      return self.status == 'guest'
     else:
-      return self.is_author_win()
+      return self.status == 'author'
 
   # update the score of the user 
   def update_user_score(self,user,increment):
