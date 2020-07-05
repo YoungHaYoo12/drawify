@@ -234,26 +234,26 @@ class Game(db.Model):
   ),nullable=False,server_default="not_confirmed")
 
   def is_turn(self,user):
-    if user == self.author and self.status == 'author_turn_to_ask':
+    if user.id == self.author.id and self.status == 'author_turn_to_ask':
       return True
     
-    if user == self.guest and self.status == 'guest_turn_to_ask':
+    if user.id == self.guest.id and self.status == 'guest_turn_to_ask':
       return True
     
     return False
   
   # returns True if game is waiting for answer from user 
   def is_waiting_answer_from(self,user):
-    if user == self.author and self.status == 'waiting_author_answer':
+    if user.id == self.author.id and self.status == 'waiting_author_answer':
       return True
-    if user == self.guest and self.status == 'waiting_guest_answer':
+    if user.id == self.guest.id and self.status == 'waiting_guest_answer':
       return True
     
     return False
 
   # returns True if user is the author of game
   def is_author(self,user):
-    return self.author == user
+    return self.author.id == user.id
   
   # update game status based on win condition
   def win_update(self):
@@ -296,7 +296,7 @@ class Game(db.Model):
 
   # validate that user1 and user2 are both players of the game
   def validate_players(self,user1,user2):
-    return (user1 == self.author and user2 == self.guest) or (user1 == self.guest and user2 == self.author)
+    return (user1.id == self.author.id and user2.id == self.guest.id) or (user1.id == self.guest.id and user2.id == self.author.id)
   
   # returns the user's opponent
   def get_opponent(self,user):
