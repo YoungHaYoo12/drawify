@@ -3,7 +3,7 @@ from app.models import Drawing,Friendship,Game,Hint,Question,User
 from app import db
 from datetime import datetime
 from sqlalchemy.exc import IntegrityError
-
+"""
 class ModelRelationshipsTestCase(FlaskTestCase):
   def test_user_drawing(self):
     u1 = User(username='one',email='one@one.com',password='one')
@@ -411,7 +411,7 @@ class UserModelTestCase(FlaskTestCase):
     self.assertEqual(u1.pending_friend_requests_count(),0)
     self.assertFalse(u2.sent_friend_request_to(u1))
     self.assertTrue(u2.can_send_friend_request_to(u1))
-
+"""
 class GameModelTestCase(FlaskTestCase):
   def test_tablename(self):
     self.assertEqual(Game.__tablename__,'games')
@@ -492,6 +492,36 @@ class GameModelTestCase(FlaskTestCase):
     game2.win_update()
     self.assertTrue(game2.status == 'guest_win')
 
+    # turn_update
+    game3 = Game(
+      current_author_points=7,
+      current_guest_points=8,
+      max_points=8,
+      author=u1,
+      guest=u2,
+      status='author_turn_to_ask'
+    )
+    self.assertEqual(game3.status,'author_turn_to_ask')
+    game3.turn_update()
+    self.assertEqual(game3.status,'waiting_guest_answer')
+    game3.turn_update()
+    self.assertEqual(game3.status,'guest_turn_to_ask')
+    game3.turn_update()
+    self.assertEqual(game3.status,'waiting_author_answer')
+    game3.turn_update()
+    self.assertEqual(game3.status,'author_turn_to_ask')
+
+    # accept game
+    game4 = Game(
+      current_author_points=7,
+      current_guest_points=8,
+      max_points=8,
+      author=u1,
+      guest=u2,
+      status='not_confirmed'
+    )
+    game4.accept_game()
+    self.assertTrue(game4.status=='author_turn_to_ask' or game4.status=='guest_turn_to_ask')
 
   def test_repr(self):
     game = Game()
