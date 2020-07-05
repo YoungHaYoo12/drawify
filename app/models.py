@@ -110,17 +110,9 @@ class User(db.Model,UserMixin):
   def unconfirmed_games(self):
     return Game.query.filter_by(guest=self).filter(Game.status == 'not_confirmed')
 
-  # returns games awaiting user answer
-  def unanswered_games(self):
-    return Game.query.filter(((Game.author == self) & (Game.turn == 'waiting_author_answer')) | ((Game.guest == self) & (Game.turn == 'waiting_guest_answer')))
-
   # returns games awaiting user confirmation 
   def unconfirmed_games_count(self):
     return Game.query.filter_by(guest=self).filter(Game.status == 'not_confirmed').count()
-
-  # returns games awaiting user answer
-  def unanswered_games_count(self):
-    return Game.query.filter(((Game.author == self) & (Game.turn == 'waiting_author_answer')) | ((Game.guest == self) & (Game.turn == 'waiting_guest_answer'))).count()
 
   # returns all games (whether user is author or guest)
   def all_games(self):
