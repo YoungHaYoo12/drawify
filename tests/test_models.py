@@ -433,7 +433,6 @@ class GameModelTestCase(FlaskTestCase):
     self.assertEqual(game.max_points,8)
     self.assertTrue(before < game.timestamp and game.timestamp < after)
     self.assertEqual(game.status,'not_confirmed')
-    self.assertEqual(game.status,'author')
 
   def test_methods(self):
     u1 = User(username='one',email='one@one.com',password='one')
@@ -444,23 +443,25 @@ class GameModelTestCase(FlaskTestCase):
       max_points=8,
       author=u1,
       guest=u2,
-      turn='author'
+      status='guest_win'
     )
+    db.session.add_all([u1,u2,game])
+    db.session.commit()
     # checking wins
-    self.assertFalse(game.is_author_win())
-    self.assertTrue(game.is_guest_win())
     self.assertFalse(game.is_user_win(u1))
     self.assertTrue(game.is_user_loss(u1))
     self.assertTrue(game.is_user_win(u2))
     self.assertFalse(game.is_user_loss(u2))
 
     # turn-related methods
+    self.assertFalse(game.is_in_progress())
+    game.status = 'author_turn_to_ask'
+    db.session.commit()
+    self.assertTrue(game.is_in_progress())
     self.assertTrue(game.is_turn(u1))
     self.assertFalse(game.is_turn(u2))
-    game.make_user_turn(u2)
-    self.assertFalse(game.is_turn(u1))
-    self.assertTrue(game.is_turn(u2))
-    game.turn = 'waiting_author_answer'
+    game.status = 'waiting_author_answer'
+    db.session.commit()
     self.assertTrue(game.is_waiting_answer_from(u1))
     self.assertFalse(game.is_waiting_answer_from(u2))
 
@@ -478,6 +479,19 @@ class GameModelTestCase(FlaskTestCase):
 
     self.assertEqual(game.get_opponent(u1),u2)
     self.assertEqual(game.get_opponent(u2),u1)
+
+    # win update
+    game2 = Game(
+      current_author_points=7,
+      current_guest_points=8,
+      max_points=8,
+      author=u1,
+      guest=u2,
+      status='author_turn_to_ask'
+    )
+    game2.win_update()
+    self.assertTrue(game2.status == 'guest_win')
+
 
   def test_repr(self):
     game = Game()
