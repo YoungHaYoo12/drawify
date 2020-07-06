@@ -11,7 +11,7 @@
     {% for request in pending_requests %}
       <li class="list-group-item list-group-item-info">
         <h3>
-        {{request.user.username}} on {{request.timestamp}}
+        {{request.user.username}} on {{moment(request.timestamp).format('LLL')}}
         </h3>
           <a href="{{url_for('core.accept_friend_request',username=request.user.username)}}">
             <button class="btn btn-primary">
