@@ -132,6 +132,18 @@ class User(db.Model,UserMixin):
     db.session.commit()
     return n
 
+  # get user's ranking points
+  def rank_points(self):
+    completed_games = self.completed_games().all()
+    games_won = 0
+    games_lost = 0
+    for game in completed_games:
+      if game.is_user_win(self):
+        games_won = games_won + 1
+      elif game.is_user_loss(self):
+        games_lost= games_lost + 1
+    return games_won - games_lost + 100
+
   @property 
   def profile_pic_link(self):
     return 'profile' + str(self.profile_pic) + '.png'

@@ -6,6 +6,7 @@
     <img src="{{url_for('static',filename='images/'+user.profile_pic_link)}}">
   </div>
   <h1>{{user.username}}</h1>
+  <p class="text-muted">{{user.rank_points()}} Points</p>
   
   <!-- Friends Info -->
   <a href="{{url_for('core.friends',username=user.username)}}">Friends: <span class="badge badge-light">{{user.friends().count()}}</span></a>
