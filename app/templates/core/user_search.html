@@ -1,0 +1,27 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="user-search-wrapper">
+  <div class="container text-center">
+    <form method="POST">
+      {{ form.hidden_tag() }}
+      <div class="form-row">
+        <div class="col">
+          {{form.username(class="form-control")}}
+        </div>
+          {{form.submit(class="btn btn-info")}}
+      </div>
+    </form>
+    <h1>Search Results For "{{username}}"</h1>
+    {% if user == None %}
+    <p class="text-muted">No Search Results Available.</p>
+    {% else %}
+    <div class="jumbotron">
+      <div class="profile-image">
+        <img src="{{url_for('static',filename='images/'+user.profile_pic_link)}}">
+      </div>
+      <a href="{{url_for('core.user',username=user.username)}}"><h2>{{user.username}}</h2></a>      
+    </div>
+    {% endif %}
+  </div>
+</div>
+{% endblock %}

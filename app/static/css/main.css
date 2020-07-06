@@ -184,6 +184,12 @@ a:hover {
   border:solid black 2px;
 }
 
+/* core/search_user.html */
+.user-search-wrapper h1 {
+  margin-top:20px;
+  margin-bottom:20px;
+}
+
 /* core/user.html */
 
 .art-gallery {

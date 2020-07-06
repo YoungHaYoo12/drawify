@@ -1,12 +1,27 @@
-from flask import render_template, request,jsonify,flash, redirect,url_for
+from flask import render_template, request,jsonify,flash, redirect,url_for,session
 from flask_login import login_required, current_user
 from app import db
 from app.core import core
+from app.core.forms import UserSearchForm
 from app.models import Notification,User,Drawing,Friendship
 
 @core.route('/')
 def index():
   return render_template('core/index.html')
+
+@core.route('/user_search/<username>', methods=['GET','POST'])
+@core.route('/user_search', methods=['GET','POST'])
+@login_required
+def user_search(username=None):
+  form = UserSearchForm()
+  if form.validate_on_submit():
+    return redirect(url_for('core.user_search', username=form.username.data))
+  elif request.method == 'GET':
+    form.username.data = username
+
+  user = User.query.filter_by(username=username).first()
+
+  return render_template('core/user_search.html', form=form, username=username,user=user)
 
 @core.route('/user/<username>')
 @login_required
