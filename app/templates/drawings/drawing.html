@@ -9,10 +9,12 @@
         <img src="{{url_for('static',filename='drawing_images/'+drawing.filename)}}" width=300px height=300px>
       </div>
       <div class="col-12">
-      {% if drawing.display %}
-      <a href="{{url_for('drawings.remove_from_display',drawing_id=drawing.id)}}"><button class="btn btn-danger">Remove from Display</button></a>
-      {% else %}
-      <a href="{{url_for('drawings.add_to_display',drawing_id=drawing.id)}}"><button class="btn btn-primary">Add to Display</button></a>
+      {% if current_user == drawing.user %}
+        {% if drawing.display %}
+        <a href="{{url_for('drawings.remove_from_display',drawing_id=drawing.id)}}"><button class="btn btn-danger">Remove from Display</button></a>
+        {% else %}
+        <a href="{{url_for('drawings.add_to_display',drawing_id=drawing.id)}}"><button class="btn btn-primary">Add to Display</button></a>
+        {% endif %}
       {% endif %}
       </div>
     </div>

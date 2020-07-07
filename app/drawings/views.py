@@ -21,6 +21,10 @@ def drawing(drawing_id):
   # retrieve and validate drawing
   drawing = Drawing.query.get_or_404(drawing_id)
 
+  # validate drawing 
+  if current_user != drawing.user and not drawing.display:
+    abort(403)
+
   return render_template('drawings/drawing.html',drawing=drawing)
 
 @drawings.route('/draw')
