@@ -16,6 +16,7 @@
         <a href="{{url_for('drawings.add_to_display',drawing_id=drawing.id)}}"><button class="btn btn-primary">Add to Display</button></a>
         {% endif %}
       {% endif %}
+        <a href="{{url_for('core.get_image',image_name=drawing.filename,drawing_id=drawing.id)}}"><button class="btn btn-primary">Download Image</button></a>
       </div>
     </div>
   </div>

@@ -32,7 +32,19 @@
         <li class="nav-item">
           <a class="nav-link" href="{{url_for('games.list')}}">My Games</a>
         </li>
-
+        <li class="nav-item dropdown">
+          <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+            Users
+          </a>
+          <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+            <a class="dropdown-item" href="{{url_for('core.user',username=current_user.username)}}">
+              My Profile
+            </a>
+            <a class="dropdown-item" href="{{url_for('core.user_search')}}">
+              Search Users
+            </a>
+          </div>
+        </li>
         <li class="nav-item dropdown">
           <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
             Inbox

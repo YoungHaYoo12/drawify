@@ -12,6 +12,7 @@ class Config():
 class DevelopmentConfig(Config):
   DEBUG = True
   SQLALCHEMY_DATABASE_URI = 'sqlite:///' + os.path.join(basedir,'data-dev.sqlite')
+  DRAWING_IMAGES = '/home/runner/drawality/drawify/app/static/drawing_images'
 
 class TestingConfig(Config):
   TESTING = True

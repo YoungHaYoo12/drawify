@@ -1,9 +1,19 @@
-from flask import render_template, request,jsonify,flash, redirect,url_for,session
+from flask import render_template, request,jsonify,flash, redirect,url_for,session,send_from_directory,abort,current_app
 from flask_login import login_required, current_user
 from app import db
 from app.core import core
 from app.core.forms import UserSearchForm
 from app.models import Notification,User,Drawing,Friendship
+
+@core.route('/get_image/<path:image_name>/<int:drawing_id>')
+def get_image(image_name,drawing_id):
+  try:
+    return send_from_directory(current_app.config['DRAWING_IMAGES'],filename=image_name,as_attachment=True)
+  except:
+    abort(404)
+  
+  drawing = Drawing.query.get_or_404(drawing_id)
+  return redirect(url_for('drawings.drawing',drawing_id=drawing.id))
 
 @core.route('/')
 def index():
