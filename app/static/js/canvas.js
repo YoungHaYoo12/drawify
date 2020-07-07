@@ -115,6 +115,9 @@ function resizeCanvasSet() {
   canvas.height = window.innerHeight;
   canvas.width = canvasWrapper.offsetWidth;
 
+  ctx.fillStyle = '#FFFFFF'; // or 'rgba(255,255,255,1)'
+  ctx.fillRect(0,0,canvas.width, canvas.height);
+
   // redraw, using inMem canvas contents
   ctx.drawImage(inMemCanvas,0,0);
 }
